@@ -23,16 +23,6 @@ class LogReg():
     def sigmoid(w_X):
         return 1.0 / (1+ np.exp(-w_X))
 
-    @staticmethod
-    def compute_accuracy(predicted, ground_truth):
-        n_correct = 0
-        for prediction, truth in zip(predicted, ground_truth):
-
-            if prediction == truth:
-                n_correct += 1
-
-        return (n_correct/len(ground_truth))*100
-
     def _set_X_y(self, X, y):
         X = np.insert(X, 0, 1, axis=1)
         self.X = np.mat(X)
@@ -52,12 +42,11 @@ class LogReg():
             self._compute_error(y_predicted)
             self._update_weights()
 
-    def predict(self, X, y):
+    def predict(self, X):
         X = np.insert(X, 0, 1, axis=1)
         predicted = self.sigmoid(np.mat(X) * self.weights)
         predicted = [1 if prediction >= 0.5 else 0 for prediction in predicted]
-        accuracy = self.compute_accuracy(predicted, y)
-        print('Achieved accuracy: {}'.format(accuracy))
+        return predicted
 
     def visualize_decision_function(self, X):
         X = np.insert(X, 0, 1, axis=1)
@@ -67,6 +56,7 @@ class LogReg():
         plt.scatter(self.listify_matrix(w_X), self.listify_matrix(sigmoid_w_X), s=10)
         plt.xlabel('Weighted X')
         plt.ylabel('Sigmoid (Weighted X)')
+        plt.title('Decision Function')
         plt.show()
 
     def visualize_decision_boundary(self, X, y):
@@ -80,6 +70,7 @@ class LogReg():
         plt.figure(figsize = (10, 10))
         plt.scatter(X_1, X_2,  s=10, c = y)
         plt.plot(X_line, y_line, color='r', linestyle='--', linewidth=1)
-        plt.xlabel('X 0')
-        plt.ylabel('X 1')
+        plt.xlabel('X 1')
+        plt.ylabel('X 2')
+        plt.title('Decision Boundary')
         plt.show()
