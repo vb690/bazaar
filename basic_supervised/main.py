@@ -1,5 +1,4 @@
 from toolbox.tester import *
-
 from logistic_regression import *
 
 if __name__ == '__main__':

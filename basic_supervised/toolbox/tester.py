@@ -18,5 +18,3 @@ def test_classification (model):
     print('Accuracy: {}'.format(scorer.accuracy()))
     print('Precision: {}'.format(scorer.precision()))
     print('Recall: {}'.format(scorer.recall()))
-    model.visualize_decision_function(X_test)
-    model.visualize_decision_boundary(X_test, y_test)
