@@ -4,7 +4,7 @@ from toolbox.scorer import *
 
 def test_classification (model):
 
-    X, y = make_classification(n_samples = 1000, n_features = 5)
+    X, y = make_classification(n_samples = 1000, n_features = 10, n_redundant=4)
 
     for train_i, test_i in StratifiedShuffleSplit().split(X, y):
 
