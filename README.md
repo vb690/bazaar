@@ -3,6 +3,6 @@ A repository for going through the basics of machine learning using the book 'Ma
 
 Addtional References
 
-# Gaussian Naive Bayes
+**Gaussian Naive Bayes**
 
 * https://github.com/odubno/GaussNaiveBayes
