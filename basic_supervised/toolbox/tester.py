@@ -2,7 +2,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.datasets import make_classification
 from toolbox.scorer import *
 
-def test_classification (model):
+def test_classification (model, one_hot=False):
 
     X, y = make_classification(n_samples = 1000, n_features = 10, n_redundant=4)
 
