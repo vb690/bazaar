@@ -3,44 +3,39 @@ A repository for going through the basics of machine learning using the book 'Ma
 
 ## Covered
 
-* **Tester**
-
+### Tester
 Utility for testing the performance of a model, it has acess to the following metrics via a `scorer` object:
-  - Recall
-  - Specificity
-  - Precision
-  - False negative rate
-  - False positive rate
-  - False discovery rate
-  - False omission rate
-  - Accuracy
-  - F1 score
+- Recall
+- Specificity
+- Precision
+- False negative rate
+- False positive rate
+- False discovery rate
+- False omission rate
+- Accuracy
+- F1 score
 
-* **Logistic Regression**
-
+### Logistic Regression
 Simple logistic model with two additional methods for:
-  - Visualizing the logistic function
-  - Visualizing the decision boundary in case the number of input features is equal to 2
+- Visualizing the logistic function
+- Visualizing the decision boundary in case the number of input features is equal to 2
 
-* **K Nearest Neighbours**
-
+### K Nearest Neighbours
 K nearest neighbour classifier with the following distance metrics availables:
   - Euclidian
   - Manhattan
   - Camberra
   - Chebychev
 
-* **Gaussian Naive Bayes**
-
+### Gaussian Naive Bayes
 Naive bayes assuming the joint probability being computed through the probaility density function of a gaussian distribution
 
-* **Bernulli Naive Bayes**
-
+### Bernulli Naive Bayes
 Naive Bayes assuming the features being binary/bolean variables
 
 ## Next to Come
 
-* **Support Vector Machine**
+### Support Vector Machine
 
 ## References
 
