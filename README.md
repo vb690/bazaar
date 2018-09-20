@@ -40,4 +40,7 @@ Naive Bayes assuming the features being binary/bolean variables
 ## References
 
 * https://www.manning.com/books/machine-learning-in-action
+* https://en.wikipedia.org/wiki/F1_score
+* http://www.molmine.com/magma/analysis/distance.htm
 * https://github.com/odubno/GaussNaiveBayes
+
