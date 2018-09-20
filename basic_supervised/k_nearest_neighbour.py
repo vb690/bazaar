@@ -1,6 +1,6 @@
 import numpy as np
 
-class _Distances():
+class __Distances():
     def euclidian(self, X_train, input_X):
         differences_matrix = np.tile(input_X, (X_train.shape[0], 1)) - X_train
         squared_differences_matrix = differences_matrix**2
@@ -24,7 +24,7 @@ class _Distances():
         distances_matrix = differences_matrix.max(axis=1)
         return distances_matrix
 
-class Knn():
+class Knn(__Distances):
     def __init__(self, k=6, distance='euclidian'):
         self.X_train = None
         self.y_train = None
@@ -36,7 +36,7 @@ class Knn():
         self.votes = None
 
     def _compute_distance_matrix(self, input_X):
-        self.distances_matrix = getattr(_Distances(), self.distance)(self.X_train, input_X)
+        self.distances_matrix = getattr(self, self.distance)(self.X_train, input_X)
         self.nearest_neighbours = self.distances_matrix.argsort()
 
     def _vote(self):

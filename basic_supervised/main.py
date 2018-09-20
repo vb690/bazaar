@@ -5,4 +5,4 @@ from naive_bayes import *
 
 if __name__ == '__main__':
 
-    test_classification(GaussianNaiveBayes())
+    test_classification(Knn())

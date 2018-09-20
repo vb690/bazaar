@@ -3,7 +3,6 @@ import math
 import numpy as np
 
 class BernulliNaiveBayes():
-
     def __init__(self):
         self.y_predicted = []
 
@@ -74,7 +73,6 @@ class BernulliNaiveBayes():
         return self.y_predicted
 
 class GaussianNaiveBayes():
-
     def __init__(self):
         self.y_predicted = []
 
