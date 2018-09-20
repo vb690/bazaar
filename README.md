@@ -4,6 +4,7 @@ A repository for going through the basics of machine learning using the book 'Ma
 ## Covered
 
 * **Tester**
+
 Utility for testing the performance of a model, it has acess to the following metrics via a `scorer` object:
   - Recall
   - Specificity
@@ -16,11 +17,13 @@ Utility for testing the performance of a model, it has acess to the following me
   - F1 score
 
 * **Logistic Regression**
+
 Simple logistic model with two additional methods for:
   - Visualizing the logistic function
   - Visualizing the decision boundary in case the number of input features is equal to 2
 
 * **K Nearest Neighbours**
+
 K nearest neighbour classifier with the following distance metrics availables:
   - Euclidian
   - Manhattan
@@ -28,9 +31,11 @@ K nearest neighbour classifier with the following distance metrics availables:
   - Chebychev
 
 * **Gaussian Naive Bayes**
+
 Naive bayes assuming the joint probability being computed through the probaility density function of a gaussian distribution
 
 * **Bernulli Naive Bayes**
+
 Naive Bayes assuming the features being binary/bolean variables
 
 ## Next to Come
