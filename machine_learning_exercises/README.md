@@ -33,10 +33,6 @@ Naive bayes assuming the joint probability being computed through the probaility
 ### Bernulli Naive Bayes
 Naive Bayes assuming the features being binary/bolean variables
 
-## Next to Come
-
-### Support Vector Machine
-
 ## References
 
 * https://www.manning.com/books/machine-learning-in-action
