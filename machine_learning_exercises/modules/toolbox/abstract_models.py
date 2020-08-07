@@ -2,6 +2,10 @@ import numpy as np
 
 
 class _Distances:
+
+    def __init__(self):
+        pass
+
     def euclidian(self, X_train, input_X):
         differences_matrix = np.tile(input_X, (X_train.shape[0], 1)) - X_train
         squared_differences_matrix = differences_matrix**2
