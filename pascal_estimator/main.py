@@ -14,7 +14,7 @@ PASC = np.array(
         np.random.normal(55, 11, 100),
         np.random.normal(341, 50, 100)
     ]
-).flatten()
+).reshape(-1, 1)
 
 model = BayesianPolyEst(
     degree=2,
@@ -26,8 +26,8 @@ model.fit(
     y=PASC
 )
 model.validate(
-    X=np.array([i for i in range(0, 10)]).reshape(-1, 1),
-    y=PASC.mean(axis=0)
+    X=np.array([1, 3, 7]),
+    y=np.array([5, 55, 341])
 )
 
 model.predict(

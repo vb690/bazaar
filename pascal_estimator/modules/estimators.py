@@ -51,7 +51,7 @@ class BayesianPolyEst:
     def validate(self, X, y):
         """
         """
-        line = np.array([i for i in range(X.max() * 2)])
+        line = np.array([i for i in range(X.max() * 2)]).reshape(-1, 1)
         X_poly = self.transformer.fit_transform(line)
         plt.figure(figsize=(10, 10))
         predictions_mean, predictions_std = self.regressor.predict(
@@ -60,13 +60,13 @@ class BayesianPolyEst:
         )
 
         plt.plot(line, predictions_mean)
-        plt.scatter(X, y, c='r')
         plt.fill_between(
-            X.flatten(),
+            line.flatten(),
             predictions_mean + (predictions_std * 2.5),
             predictions_mean - (predictions_std * 2.5),
             alpha=0.25
         )
+        plt.scatter(X, y, c='r')
         plt.xlabel('Concentration')
         plt.ylabel('Estimated Pascal')
         plt.show()
