@@ -72,5 +72,5 @@ class Scorer:
 
     def f1_score(self):
         nominator = (self.precision() * self.recall())
-        denominator = (self.precision() * self.recall())
+        denominator = (self.precision() + self.recall())
         return 2 * (nominator / denominator)

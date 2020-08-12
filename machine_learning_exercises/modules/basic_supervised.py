@@ -6,7 +6,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from toolbox.abstract_models import _Distances
+from .toolbox.abstract_models import _Distances
 
 
 class Knn(_Distances):

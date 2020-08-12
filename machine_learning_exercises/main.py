@@ -6,6 +6,10 @@ from modules.toolbox.tester import test_classification
 
 if __name__ == '__main__':
 
-    test_classification(Knn())
-    test_classification(LogReg())
-    test_classification(GaussianNaiveBayes())
+    MODELS = {
+        'K-nearest Neighbour': Knn(),
+        'Logistic Regression': LogReg(),
+        'Gaussian Naive Bayes': GaussianNaiveBayes()
+    }
+
+    test_classification(MODELS)
