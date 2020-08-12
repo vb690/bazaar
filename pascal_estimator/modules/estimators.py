@@ -6,6 +6,7 @@ from sklearn.linear_model import BayesianRidge
 from sklearn.preprocessing import PolynomialFeatures
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class BayesianPolyEst:
@@ -72,6 +73,9 @@ class BayesianPolyEst:
     def validate(self, X, y):
         """
         """
+        sns.set(
+            font_scale=2
+        )
         line = np.array([i for i in range(X.max() * 2)]).reshape(-1, 1)
         X_poly = self.transformer.fit_transform(line)
         plt.figure(figsize=(10, 10))
