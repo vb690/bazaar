@@ -1,4 +1,4 @@
-# Polynomial bayesian ridge regression for pascal estimation
+# Polynomial Bayesian Ridge Regression for Rigidity Estimation
 
 Small project showing the application of Polynomial Bayesian Ridge Regression for estimati the rigidity of a gel given the concentration of the compund component present in it.
 
