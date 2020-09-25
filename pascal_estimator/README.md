@@ -1,6 +1,6 @@
 # Polynomial bayesian ridge regression for pascal estimation
 
-Small project for estimate strength of a gel (in Pascal) given the concentration of the compund used.
+Small project showing the application of Polynomial Bayesian Ridge Regression for estimati the rigidity of a gel given the concentration of the compund component present in it.
 
 ## Problem
 
