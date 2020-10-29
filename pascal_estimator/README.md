@@ -1,6 +1,6 @@
 # Polynomial Bayesian Ridge Regression for Rigidity Estimation
 
-Small project showing the application of Polynomial Bayesian Ridge Regression for estimating the rigidity of a gel given the concentration of a compund component present in it.
+Small project showing the application of Polynomial Bayesian Ridge Regression for estimating the rigidity of a gel given the concentration of their components.
 
 ## Motivation
 
