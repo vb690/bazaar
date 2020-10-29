@@ -1,6 +1,6 @@
 import numpy as np
 
-from modules.estimators import BayesianPolyEst
+from modules.bayesian_estimators import BayesianPolyEst
 
 CONCENTRATION = [1, 3, 7]
 PASCAL = [[5, 0.1], [55, 11], [341, 50]]

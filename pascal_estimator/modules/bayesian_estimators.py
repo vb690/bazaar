@@ -1,3 +1,19 @@
+"""Module containing bayesian estimator classes based on scikit-learn.
+
+This module contains a collection of bayesian estimator classes. Each estimator
+is tasked exclusively to perform prediction and no method for parameters
+inspection is explicitly implemented. However access to the underlying
+scikit-learn estimator is granted throught the get_estimator method.
+
+  Typical usage example:
+
+  estimator = ClassEstimator()
+
+  estimator.fit()
+  estimator.validate()
+  estimator.predict()
+"""
+
 import numpy as np
 
 import pandas as pd
@@ -5,11 +21,10 @@ import pandas as pd
 from sklearn.linear_model import BayesianRidge
 from sklearn.preprocessing import PolynomialFeatures
 
-import matplotlib.pyplot as plt
-import seaborn as sns
+from _abstract_estimators import AbstractBayesianEstimator
 
 
-class BayesianPolyEst:
+class BayesianPolyEst(AbstractBayesianEstimator):
     """
     """
     def __init__(self, degree, sim_size=200, **kwargs):
@@ -21,13 +36,11 @@ class BayesianPolyEst:
 
     @staticmethod
     def prediction_printer(X, mean, std):
-        """
-        """
         for x, m, s in zip(X, mean, std):
 
             print(f'Estimated Pascal for concentration {x}: {m} + / - {s}')
 
-    def fit(self, X, y, simulate=False, save_name=None):
+    def fit(self, X, y, simulate=False, save_name=None, **kwargs):
         """
         """
         setattr(self, 'save_name', save_name)
@@ -37,10 +50,18 @@ class BayesianPolyEst:
             y = np.array([np.random.normal(m, s, self.sim_size) for m, s in y])
             y = y.reshape(-1, 1)
         X_poly = self.transformer.fit_transform(X)
+        if 'distributions' in kwargs:
+            self.loo_hyperp_tuning(
+                regressor=self.regressor,
+                X=X_poly,
+                y=y,
+                **kwargs
+            )
         self.regressor.fit(
             X_poly,
             y
         )
+        return None
 
     def predict(self, X, verbose=False):
         """
@@ -73,28 +94,18 @@ class BayesianPolyEst:
     def validate(self, X, y):
         """
         """
-        sns.set(
-            font_scale=2
-        )
         line = np.array([i for i in range(X.max() * 2)]).reshape(-1, 1)
         X_poly = self.transformer.fit_transform(line)
-        plt.figure(figsize=(10, 10))
+
         predictions_mean, predictions_std = self.regressor.predict(
             X_poly,
             return_std=True
         )
 
-        plt.plot(line, predictions_mean)
-        plt.fill_between(
-            line.flatten(),
-            predictions_mean + (predictions_std * 2.5),
-            np.clip(predictions_mean - (predictions_std * 2.5), 0, np.inf),
-            alpha=0.25
+        self.validation_plot(
+            X=X,
+            y=y,
+            line=line,
+            predictions_mean=predictions_mean,
+            predictions_std=predictions_std
         )
-        plt.scatter(X, y, c='r')
-        plt.xlabel('Concentration')
-        plt.ylabel('Estimated Pascal')
-        if self.save_name is not None:
-            plt.title(f'Estimated Pascal for {self.save_name}')
-            plt.savefig(f'results\\images\\{self.save_name}.png')
-        plt.show()
