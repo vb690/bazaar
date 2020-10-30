@@ -1,4 +1,7 @@
+
 # Polynomial Bayesian Ridge Regression for Rigidity Estimation
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Small project showing the application of Polynomial Bayesian Ridge Regression for estimating the rigidity of a gel given the concentration of their components.
 
@@ -47,7 +50,7 @@ model.validate(
 </p>   
   
 ```python
-esults = model.predict(
+results = model.predict(
     X=np.array([2, 5, 16, 21]).reshape(-1, 1),
     verbose=True
 )
@@ -56,3 +59,5 @@ esults = model.predict(
 ## Credits
 
 ## License
+
+[The MIT License](https://github.com/vb690/bazaar/blob/master/LICENSE)
