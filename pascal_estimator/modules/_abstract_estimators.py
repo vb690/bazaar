@@ -14,6 +14,9 @@ from abc import ABC
 
 import numpy as np
 
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import LeaveOneOut as loo
+
 import matplolib.pyplot as plt
 import seaborn as sns
 
@@ -30,7 +33,14 @@ class AbstractBayesianEstimator(ABC):
     def loo_hyperp_tuning(regressor, X, y, distributions, **kwargs):
         """
         """
-        return None
+        tuner = RandomizedSearchCV(
+            estimator=regressor,
+            param_distribution=distributions,
+            cv=loo,
+            **kwargs
+        )
+        tuner.fit(X, y)
+        return tuner.best_estimator_
 
     @staticmethod
     def prediction_printer(X, mean, std):
