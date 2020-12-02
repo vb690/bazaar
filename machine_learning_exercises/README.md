@@ -1,4 +1,6 @@
 # Exercises for learning how to teach to the machines
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
 A repository for going through the basics of machine learning using the book 'Machine Learning In Action'. All the models employs scikit-learn like methods, like `fit` and `predict`, for training and performing the prediction.
 
 ## Covered
