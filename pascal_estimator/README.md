@@ -9,10 +9,6 @@ Small project showing the application of Polynomial Bayesian Ridge Regression fo
 
 ## Features
 
-## Examples
-
-## Installation
-
 ## How to use  
   
 ```python
