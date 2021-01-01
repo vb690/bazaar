@@ -13,8 +13,6 @@ specific product inside that area.
 
 import numpy as np
 
-from scipy.special import softmax
-
 
 class SoftmaxRecommender:
     """Class implementing a recommendation engine based on
@@ -60,7 +58,7 @@ class SoftmaxRecommender:
         self.products_mapper = products_mapper
 
     @staticmethod
-    def temperated_prediction(probabilities, temperature=1.0):
+    def temperated_prediction(frequencies, temperature=1.0):
         """Static method for sampling from the temperated output
         of a softmax function.
 
@@ -73,12 +71,10 @@ class SoftmaxRecommender:
         Returns:
             - The argmax of the temperated softmax output
         """
-        probabilities = np.asarray(probabilities).astype('float64')
-        # take the log of the probabilities
-        probabilities = np.log(probabilities) / temperature
-        # take the exponentiated result
-        exp_probabilities = np.exp(probabilities)
-        p_probabilities = exp_probabilities / np.sum(exp_probabilities)
+        numerator = np.exp(frequencies / temperature)
+        denominator = np.sum(np.exp(frequencies / temperature), axis=1)
+        denominator = denominator.reshape(-1, 1)
+        p_probabilities = numerator / denominator
         predictions = np.random.multinomial(1, p_probabilities, 1)
         return np.argmax(predictions)
 
@@ -96,21 +92,15 @@ class SoftmaxRecommender:
             - rec_area: string, recommended area
             - rec_product: string, recommended product
         """
-        # transform frquencies to probabilities for a specific query
-        area_probabilities = softmax(self.areas_dict[query_id])
         # find the most probable area applying temperature for variability
         area_recommendation = self.temperated_prediction(
-            probabilities=area_probabilities,
+            frequencies=self.areas_dict[query_id],
             temperature=temperature_area
         )
 
-        # transform frquencies to probabilities for a specific area
-        product_probabilities = softmax(
-            self.products_dict[area_recommendation]
-        )
         # find the most probable product applying temperature for variability
         product_recommendation = self.temperated_prediction(
-            probabilities=product_probabilities,
+            frequencies=self.products_dict[area_recommendation],
             temperature=temperature_product
         )
 

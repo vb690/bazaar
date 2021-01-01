@@ -64,7 +64,7 @@ for user_id in np.random.randint(0, 100000, 15):
 
     area, product = recommender.recommend(
         query_id=user_id,
-        temperature_area=40,
-        temperature_product=40
+        temperature_area=2,
+        temperature_product=2
     )
     print(f'User {user_id} might like a {area} movie like {product}')
