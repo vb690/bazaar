@@ -7,7 +7,14 @@ Small project showing the application of Polynomial Bayesian Ridge Regression fo
 
 ## Motivation
 
-Let's immagine that we are working with a gel which rigidity in Pascal (Pa) is a function of the concentration of a component X in the gel. We do not know how this function looks like and the company producing the gel only provides the mean (and standard deviation) Pa for a restricted number of concentration values. Unfortunately for our use case we need to know the regidity of the gel for all the possible values of concentration.
+Let's immagine that we are working with a gel which rigidity in Pascal (Pa) is a function of the concentration of a component X present in it. We do not know how this function looks like and the maifacturer producing the gel only provides the mean (and standard deviation) Pa for a restricted number of concentration values. Unfortunately for our use case we need to know the rigidity of the gel for all the possible concentration values of X.  
+  
+One possibility for overcoming this inconvenience could be to infer the relationship between Pa and the concentration of components X using the data provided by the manifacturer. This can be done through regression anlaysis satisfying however two major requirements:
+  
+1. Being able to estimate a non-linear relationship if present.
+2. Being applicable in data-scarce settings.
+
+In this view, fitting a [polynomial regression](https://en.wikipedia.org/wiki/Polynomial_regression#Alternative_approaches) within a [bayesian framework](https://en.wikipedia.org/wiki/Bayesian_statistics) seems to be one of the most straightforward solutions.
 
 ## Features
 
@@ -71,7 +78,7 @@ results = model.predict(
 ## Shortcomings
 
 1. The modelling approach is over-simplicistic.  
-2. Polynomial regressions can behave in an un-predictable manner (expecially at high degree).
+2. Polynomial regressions can behave in an [un-predictable manners](https://en.wikipedia.org/wiki/Polynomial_regression#Alternative_approaches) (expecially at high degrees) .
 3. There is no control on the type of priors used by the model (defaults provided by scikit-learn).
 
 ## Credits
