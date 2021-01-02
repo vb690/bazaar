@@ -72,7 +72,7 @@ results = model.predict(
 
 1. The modelling approach is over-simplicistic.  
 2. Polynomial regressions can behave in an un-predictable manner (expecially at high degree).
-3. There is no control on the type of priors used by the model (default scikit-learn implementation)
+3. There is no control on the type of priors used by the model (defaults provided by scikit-learn).
 
 ## Credits
 
