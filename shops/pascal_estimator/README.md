@@ -3,14 +3,21 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Small project showing the application of Polynomial Bayesian Ridge Regression for estimating the rigidity of a gel given the concentration of their components.
+Small project showing the application of Polynomial Bayesian Ridge Regression for estimating the rigidity of a gel given the concentration of its components.
 
 ## Motivation
 
+Let's immagine that we are working with a gel which rigidity in Pascal (Pa) is a function of the concentration of a component X in the gel. We do not know how this function looks like and the company producing the gel only provides the mean (and standard deviation) Pa for a restricted number of concentration values. Unfortunately for our use case we need to know the regidity of the gel for all the possible values of concentration.
+
 ## Features
 
+1. Create a flexible model for estimating the rigidity of a gel given the concentration of its components.
+2. Explicitly represent uncertainity in the estimation.
+3. Possibility to simulate synthetic data in case when only descriptive statistics are provided.
+4. Possibility to tune the hyper-parameters of the model used for estimation.
+
 ## How to use  
-  
+
 ```python
 CONCENTRATION = [1, 3, 7]
 PASCAL = [[5, 0.1], [55, 11], [341, 50]]
@@ -60,6 +67,12 @@ results = model.predict(
 |       5       |     165     |     26     |
 |       16      |     1856    |     47     |
 |       21      |     3229    |     85     |
+
+## Shortcomings
+
+1. The modelling approach is over-simplicistic.  
+2. Polynomial regressions can behave in an un-predictable manner (expecially at high degree).
+3. There is no control on the type of priors used by the model (default scikit-learn implementation)
 
 ## Credits
 
