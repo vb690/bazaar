@@ -121,7 +121,7 @@ from recommendation_engines import RandomRecommender
 
 recommender = RuleBasedRecommender(
     areas_mapper=areas_mapper,
-    products_mapper=products_mapper
+    products_mapper=products_mapper,
     areas_ps=areas_ps, 
     products_ps=products_ps
 )
