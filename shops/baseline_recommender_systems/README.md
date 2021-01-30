@@ -15,25 +15,21 @@ This repository arises from the need of having very basic methodologies for reco
 
 ## Features
 
+**Random Recommender**  
+Recommender engine employing a random strategy. Recommendations are provided sampling uniformely at random from the availbale choices.
+  
+**Rule-based Recommender**  
+Recommender engine employing a rule-based strategy. Recommendations are provided according to probabilities provided by the user.
+
 **Softmax Recommender**  
 Recommender engine employing a temperated softmax strategy. Recommendations are provided according to probabilities derived from observed frequencies.  
   
-**Random Recommender**  
-TO DO  
-  
-**Rule-based Recommender**  
-TO DO  
 
 ## How to use  
   
-
-**Softmax Recommender**  
 We generate some synthetic data.
 ```python
 import numpy as np
-
-from recommendation_engines import SoftmaxRecommender
-
 
 areas_mapper = {
     0: 'Action',
@@ -76,6 +72,22 @@ products_mapper = {
 
 }
 
+# probabilities for the rule-based recommender
+areas_ps = {}
+for customer_id in range(100000):
+  
+  p = np.random.random(size=5)
+  p = p / p.sum()
+  areas_ps[customer_id] = p
+
+products_ps = {}
+for area_id in range(5):
+
+  p = np.random.random(size=3)
+  p = p / p.sum()
+  products_ps[area_id] = p
+
+# frequencies for the softmax recommender
 areas_dict = {
     customer_id: np.random.randint(0, 100, size=5) for
     customer_id in range(100000)
@@ -83,18 +95,59 @@ areas_dict = {
 products_dict = {
     area_id: np.random.randint(0, 100, size=(3)) for area_id in range(5)
 }
-```  
-We then instantiate the SoftmaxRecommender class with the generated data.
+```
+### Random Recommender
+We instantiate the RandomRecommender class with the generated data.
 ```python
+from recommendation_engines import RandomRecommender
+
+recommender = RandomRecommender(
+    areas_mapper=areas_mapper,
+    products_mapper=products_mapper
+)
+```  
+Perform recommendations for a random sample of 15 users.
+```python
+for user_id in np.random.randint(0, 100000, 15):
+
+    area, product = recommender.recommend(
+        query_id=user_id
+    )
+```  
+### Rule-Based Recommender
+We instantiate the RuleBasedRecommender class with the generated data.
+```python
+from recommendation_engines import RandomRecommender
+
+recommender = RuleBasedRecommender(
+    areas_mapper=areas_mapper,
+    products_mapper=products_mapper
+    areas_ps=areas_ps, 
+    products_ps=products_ps
+)
+```  
+Perform recommendations for a random sample of 15 users.
+```python
+for user_id in np.random.randint(0, 100000, 15):
+
+    area, product = recommender.recommend(
+        query_id=user_id
+    )
+```  
+### Softmax Recommender
+
+We instantiate the SoftmaxRecommender class with the generated data.
+```python
+from recommendation_engines import SoftmaxRecommender
+
 recommender = SoftmaxRecommender(
     areas_dict=areas_dict,
     products_dict=products_dict,
     areas_mapper=areas_mapper,
     products_mapper=products_mapper
 )
-
 ```  
-And finally perform recommendations for a random sample of 15 users.
+Perform recommendations for a random sample of 15 users.
 ```python
 for user_id in np.random.randint(0, 100000, 15):
 
@@ -103,9 +156,8 @@ for user_id in np.random.randint(0, 100000, 15):
         temperature_area=40,
         temperature_product=40
     )
-    print(f'User {user_id} might like a {area} movie like {product}')
 ```  
-Obtaining the following results:
+## Output Examples
 ```
 User 85306 might like a Drama movie like Awakenings
 User 58138 might like a Drama movie like Patch Adams
