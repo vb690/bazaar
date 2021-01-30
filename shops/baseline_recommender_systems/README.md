@@ -16,10 +16,10 @@ This repository arises from the need of having very basic methodologies for reco
 ## Features
 
 **Random Recommender**  
-Recommender engine employing a random strategy. Recommendations are provided sampling uniformely at random from the availbale choices.
+Recommender engine employing a random strategy. Recommendations are provided sampling uniformly at random from the available choices.
   
 **Rule-based Recommender**  
-Recommender engine employing a rule-based strategy. Recommendations are provided according to probabilities provided by the user.
+Recommender engine employing a rule-based strategy. Recommendations are provided sampling at random in accordance to probabilities provided by the user.
 
 **Softmax Recommender**  
 Recommender engine employing a temperated softmax strategy. Recommendations are provided according to probabilities derived from observed frequencies.  
