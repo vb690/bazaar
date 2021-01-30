@@ -24,11 +24,6 @@ import seaborn as sns
 class AbstractBayesianEstimator(ABC):
     """
     """
-    def __init__(self):
-        """
-        """
-        pass
-
     @staticmethod
     def loo_hyperp_tuning(regressor, X, y, distributions, **kwargs):
         """

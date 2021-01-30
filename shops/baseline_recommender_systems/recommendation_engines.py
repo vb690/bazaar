@@ -14,6 +14,108 @@ specific product inside that area.
 import numpy as np
 
 
+class RandomRecommender:
+    """Class implementing a recommendation engine based on uniform
+        random sampling.
+
+    The recommendation engine will select area and product sampling unifromly
+    at random from the collection of areas and products.
+
+    Attributes:
+        areas_mapper: a dictionary, keys are indices associated
+            to each area values are names for each area.
+
+        products_mapper:a dictionary, keys are indices associated
+            to each product values are names for each product.
+    """
+    def __init__(self, areas_mapper, products_mapper):
+        """Inits RandomRecommender.
+        """
+        self.areas = list(areas_mapper.keys())
+        self.products = list(products_mapper.keys())
+
+        self.areas_mapper = areas_mapper
+        self.products_mapper = products_mapper
+
+    def recommend(self, query_id):
+        """Perform the recommendation.
+        Args:
+            - query_id: integer or string, key associated to a specific query
+
+        Returns
+            - rec_area: string, recommended area
+            - rec_product: string, recommended product
+        """
+        # sample uniformly at random from a list of availbale areas indices
+        area_recommendation = np.random.choice(self.areas)
+
+        # sample uniformly at random from a list of availbale products indices
+        product_recommendation = np.random.choice(self.products)
+
+        # map indices to strings
+        rec_area = self.areas_mapper[area_recommendation]
+        rec_product = self.products_mapper[rec_area][product_recommendation]
+
+        return rec_area, rec_product
+
+
+class RuleBasedRecommender:
+    """Class implementing a recommendation engine based on user-defined
+       probabilities
+
+    The recommendation engine will select area and product sampling at random
+    from the collection of areas and products using probabilities provided by
+    the user.
+
+    Attributes:
+        areas_mapper: a dictionary, keys are indices associated
+            to each area values are names for each area.
+
+        products_mapper:a dictionary, keys are indices associated
+            to each product values are names for each product.
+
+        areas_ps:an iterable, indicates the probability associated to
+            each area.
+
+        products_ps:an iterable, indicates the probability associated to
+            each product.
+    """
+    def __init__(self, areas_mapper, products_mapper, areas_ps, products_ps):
+        """Inits RandomRecommender.
+        """
+        self.areas = list(areas_mapper.keys())
+        self.products = list(products_mapper.keys())
+
+        self.areas_mapper = areas_mapper
+        self.products_mapper = products_mapper
+
+        self.areas_ps = areas_ps
+        self.products_ps = products_ps
+
+    def recommend(self, query_id):
+        """Perform the recommendation.
+        Args:
+            - query_id: integer or string, key associated to a specific query
+
+        Returns
+            - rec_area: string, recommended area
+            - rec_product: string, recommended product
+        """
+        # sample uniformly at random from a list of availbale areas indices
+        areas_p = self.areas_ps[query_id]
+        area_recommendation = np.random.choice(self.areas, p=areas_p)
+
+        # sample uniformly at random from a list of availbale products indices
+        products_p = self.products_ps[query_id]
+        product_recommendation = np.random.choice(self.products, p=products_p)
+
+        # map indices to strings
+        rec_area = self.areas_mapper[area_recommendation]
+        rec_product = self.products_mapper[rec_area][product_recommendation]
+
+        return rec_area, rec_product
+
+
 class SoftmaxRecommender:
     """Class implementing a recommendation engine based on
     temperated softmax.
