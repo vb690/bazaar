@@ -1,5 +1,7 @@
 import numpy as np
 
+from recommendation_engines import RandomRecommender
+from recommendation_engines import RuleBasedRecommender
 from recommendation_engines import SoftmaxRecommender
 
 
@@ -44,6 +46,22 @@ products_mapper = {
 
 }
 
+# probabilities for the rule-based recommender
+areas_ps = {}
+for customer_id in range(100000):
+
+    p = np.random.random(size=5)
+    p = p / p.sum()
+    areas_ps[customer_id] = p
+
+products_ps = {}
+for area_id in range(5):
+
+    p = np.random.random(size=3)
+    p = p / p.sum()
+    products_ps[area_id] = p
+
+# frequencies for the softmax recommender
 areas_dict = {
     customer_id: np.random.randint(0, 100, size=5) for
     customer_id in range(100000)
@@ -52,6 +70,58 @@ products_dict = {
     area_id: np.random.randint(0, 100, size=(3)) for area_id in range(5)
 }
 
+areas_dict = {
+    customer_id: np.random.randint(0, 100, size=5) for
+    customer_id in range(100000)
+}
+products_dict = {
+    area_id: np.random.randint(0, 100, size=(3)) for area_id in range(5)
+}
+
+random_users = np.random.randint(0, 100000, 15)
+
+##############################################################################
+
+print('Random recommendations')
+print('')
+
+recommender = RandomRecommender(
+    areas_mapper=areas_mapper,
+    products_mapper=products_mapper
+)
+for user_id in random_users:
+
+    area, product = recommender.recommend(
+        query_id=user_id
+    )
+    print(f'User {user_id} might like a {area} movie like {product}')
+
+print('')
+
+##############################################################################
+
+print('Rule Based recommendations')
+print('')
+
+recommender = RuleBasedRecommender(
+    areas_mapper=areas_mapper,
+    products_mapper=products_mapper,
+    areas_ps=areas_ps,
+    products_ps=products_ps
+)
+for user_id in random_users:
+
+    area, product = recommender.recommend(
+        query_id=user_id
+    )
+    print(f'User {user_id} might like a {area} movie like {product}')
+
+print('')
+
+##############################################################################
+
+print('Softmax recommendations')
+print('')
 
 recommender = SoftmaxRecommender(
     areas_dict=areas_dict,
@@ -60,7 +130,7 @@ recommender = SoftmaxRecommender(
     products_mapper=products_mapper
 )
 
-for user_id in np.random.randint(0, 100000, 15):
+for user_id in random_users:
 
     area, product = recommender.recommend(
         query_id=user_id,
@@ -68,3 +138,5 @@ for user_id in np.random.randint(0, 100000, 15):
         temperature_product=2
     )
     print(f'User {user_id} might like a {area} movie like {product}')
+
+print('')
