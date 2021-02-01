@@ -22,7 +22,7 @@ Recommender engine employing a random strategy. Recommendations are provided sam
 Recommender engine employing a rule-based strategy. Recommendations are provided sampling at random in accordance to probabilities provided by the user.
 
 **Softmax Recommender**  
-Recommender engine employing a temperated softmax strategy. Recommendations are provided according to probabilities derived from observed frequencies.  
+Recommender engine employing a temperated softmax strategy. Recommendations are provided sampling at random in accordance to probabilities computed applying a temperated softmax to observed frequencies.  
   
 
 ## How to use  
