@@ -1,0 +1,6 @@
+numpy
+pymc3
+matplolib
+seaborn
+streamlit
+
