@@ -52,8 +52,8 @@ def get_anscombe_quartet():
     return quartet
 
 
-def linear_regression(x, y, mu_intercept=0, sd_intercept=1,
-                      mu_slope=0, sd_slope=1, mu_error=1,  **kwargs):
+def linear_regression(x, y, mu_intercept, sd_intercept,
+                      mu_slope, sd_slope, mu_error,  **kwargs):
     """
     """
     with pm.Model() as linear_model:
@@ -99,7 +99,8 @@ def linear_regression(x, y, mu_intercept=0, sd_intercept=1,
     return trace
 
 
-def get_anscombe_quartet_traces(quartet, **kwargs):
+def get_anscombe_quartet_traces(quartet, mu_intercept=0, sd_intercept=1,
+                                mu_slope=0, sd_slope=1, mu_error=1, **kwargs):
     """
     """
     quartet_traces = {}
@@ -108,13 +109,17 @@ def get_anscombe_quartet_traces(quartet, **kwargs):
         quartet_traces[component] = linear_regression(
             x=dataset['x'],
             y=dataset['y'],
+            mu_intercept=0,
+            sd_intercept=1,
+            mu_slope=0,
+            sd_slope=1,
+            mu_error=1,
             **kwargs
         )
 
     return quartet_traces
 
 
-@st.cache
 def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
     """Visualize the anscombe quartet
 
@@ -177,21 +182,74 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
 
     return fig
 
+###############################################################################
 
-quartet = get_anscombe_quartet()
-quartet_traces = get_anscombe_quartet_traces(
-    quartet=quartet,
-    cores=1,
-    target_accept=0.9,
-    draws=500,
-    tune=500
-)
-fig = plot_anscombe_quartet(
-    quartet=quartet,
-    quartet_traces=quartet_traces,
-    nrows=1,
-    ncols=4,
-    figsize=(12, 3),
-    sharex=True,
-    sharey=True
-)
+
+if __name__ == '__main__':
+
+    st.title("Bayesian Anscombe's Quartet")
+
+    quartet = get_anscombe_quartet()
+
+    col1, col2 = st.beta_columns(2)
+    st.sidebar.title('Regression Priors')
+    mu_intercept = st.sidebar.slider(
+        '\u03BC Intercept',
+        min_value=-10.,
+        max_value=10.,
+        value=0.,
+        step=0.1
+    )
+    sd_intercept = st.sidebar.slider(
+        '\u03C3 Intercept',
+        min_value=0.,
+        max_value=10.,
+        value=1.,
+        step=0.1
+    )
+    mu_slope = st.sidebar.slider(
+        '\u03BC Slope',
+        min_value=-10.,
+        max_value=10.,
+        value=0.,
+        step=0.1
+    )
+    sd_slope = st.sidebar.slider(
+        '\u03C3 Slope',
+        min_value=0.,
+        max_value=10.,
+        value=1.,
+        step=0.1
+    )
+    mu_error = st.sidebar.slider(
+        '\u03B2 Error',
+        min_value=0.1,
+        max_value=10.,
+        value=1.,
+        step=0.1
+    )
+
+    quartet_traces = get_anscombe_quartet_traces(
+        quartet=quartet,
+        mu_intercept=mu_intercept,
+        sd_intercept=sd_intercept,
+        mu_slope=mu_slope,
+        sd_slope=sd_slope,
+        mu_error=mu_error,
+        cores=1,
+        target_accept=0.9,
+        draws=200,
+        tune=200
+    )
+
+    fig = plot_anscombe_quartet(
+        quartet=quartet,
+        quartet_traces=quartet_traces,
+        nrows=2,
+        ncols=2,
+        figsize=(7, 7),
+        sharex=True,
+        sharey=True
+    )
+
+    col1.pyplot(fig)
