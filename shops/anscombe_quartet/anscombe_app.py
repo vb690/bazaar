@@ -1,9 +1,11 @@
 import numpy as np
+from scipy.stats.stats import pearsonr
+
+import pandas as pd
 
 import pymc3 as pm
 
 import matplotlib.pyplot as plt
-import seaborn as sns
 import streamlit as st
 
 
@@ -11,10 +13,60 @@ import streamlit as st
 def compute_r2(y, y_hat):
     """
     """
-    ss_res = np.sum(y - y_hat) ** 2
-    ss_tot = np.sum(y - np.mean(y)) ** 2
-    r2 = ss_res / ss_tot
-    return round(r2, 2)
+    ss_res = np.sum((y - y_hat) ** 2)
+    ss_tot = np.sum((y - np.mean(y)) ** 2)
+    r2 = 1 - (ss_res / ss_tot)
+    return r2
+
+
+@st.cache
+def compute_anscombe_descriptives(quartet, quartet_traces):
+    """
+    """
+    descriptives = pd.DataFrame(
+        columns=[
+            'Dataset',
+            '\u03BC X',
+            '\u03BC Y',
+            '\u03C3\u00B2 X',
+            '\u03C3\u00B2 Y',
+            '\u03C1(X, Y)',
+            'R\u00B2'
+        ]
+    )
+    for index, component in enumerate(['I', 'II', 'III', 'IV']):
+
+        component_x = quartet[component]['x']
+        component_y = quartet[component]['y']
+        component_intercept = quartet_traces[component]['Intercept']
+        component_slope = quartet_traces[component]['Slope']
+        component_line = component_intercept.reshape(-1, 1)  \
+            + component_slope.reshape(-1, 1) * component_x.reshape(1, -1)
+        component_line = component_line = component_line.mean(axis=0)
+
+        component_mu_x = round(np.mean(component_x), 3)
+        component_mu_y = round(np.mean(component_y), 3)
+        component_var_x = round(np.var(component_x, ddof=1), 3)
+        component_var_y = round(np.var(component_y, ddof=1), 3)
+        component_rho_x_y = round(pearsonr(component_x, component_y)[0], 3)
+        component_r2 = round(compute_r2(component_y, component_line), 2)
+
+        descriptives.loc[index] = [
+            component,
+            component_mu_x,
+            component_mu_y,
+            component_var_x,
+            component_var_y,
+            component_rho_x_y,
+            component_r2,
+        ]
+
+    descriptives = descriptives.transpose()
+    descriptives.rename(columns=descriptives.iloc[0], inplace=True)
+    descriptives.drop('Dataset', axis=0, inplace=True)
+    descriptives = descriptives.transpose()
+
+    return descriptives
 
 
 @st.cache
@@ -90,10 +142,15 @@ def linear_regression(x, y, mu_intercept, sd_intercept,
     with linear_model:
 
         trace = pm.sample(**kwargs)
+        pp = pm.sample_posterior_predictive(
+            trace,
+            var_names=['Intercept', 'Slope', 'Y']
+        )
 
     trace = {
-        'Intercept': trace['Intercept'],
-        'Slope': trace['Slope']
+        'Intercept': pp['Intercept'],
+        'Slope': pp['Slope'],
+        'Y': pp['Y']
     }
 
     return trace
@@ -120,7 +177,7 @@ def get_anscombe_quartet_traces(quartet, mu_intercept=0, sd_intercept=1,
     return quartet_traces
 
 
-def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
+def plot_anscombe_quartet(quartet, quartet_traces, show_predictions, **kwargs):
     """Visualize the anscombe quartet
 
     Args:
@@ -131,12 +188,16 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
     Returns:
         - fig: a matplolib figure obejct containing the anscombe plot.
     """
-    quartet_components = ['I', 'II', 'III', 'IV']
+    if show_predictions:
+        alpha = 0.1
+    else:
+        alpha = 1
     fig, axs = plt.subplots(**kwargs)
-    for component, ax in zip(quartet_components, axs.flatten()):
+    for component, ax in zip(['I', 'II', 'III', 'IV'], axs.flatten()):
 
         component_intercept = quartet_traces[component]['Intercept']
         component_slope = quartet_traces[component]['Slope']
+        component_predictions = quartet_traces[component]['Y']
 
         component_x = quartet[component]['x']
         component_y = quartet[component]['y']
@@ -147,7 +208,7 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
         )
         component_line = component_intercept.reshape(-1, 1) +  \
             component_slope.reshape(-1, 1) * component_predictor.reshape(1, -1)
-        lower, upper = np.percentile(component_line, [5, 90], axis=0)
+        lower_line, upper_line = np.percentile(component_line, [5, 90], axis=0)
         component_line = component_line.mean(axis=0)
 
         ax.plot(
@@ -158,8 +219,8 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
         )
         ax.fill_between(
             component_predictor,
-            lower,
-            upper,
+            lower_line,
+            upper_line,
             color='r',
             alpha=0.1
         )
@@ -169,11 +230,29 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
             facecolors='none',
             edgecolors='k',
             s=20,
-            zorder=1
+            zorder=1,
+            alpha=alpha
         )
+        if show_predictions:
+            ax.scatter(
+                component_x,
+                component_predictions.mean(axis=0),
+                facecolors='none',
+                edgecolors='r',
+                s=20,
+                zorder=1
+            )
+            ax.errorbar(
+                x=component_x,
+                y=component_predictions.mean(axis=0),
+                yerr=component_predictions.std(axis=0),
+                linewidth=0.5,
+                color='r',
+                ls='none'
+            )
 
         ax.set_xlim(2, 20)
-        ax.set_ylim(2, 14)
+        ax.set_ylim(0, 16)
         ax.set_title(component)
 
     fig.text(0.5, 0.00, 'X', ha='center')
@@ -182,16 +261,15 @@ def plot_anscombe_quartet(quartet, quartet_traces, **kwargs):
 
     return fig
 
-###############################################################################
 
-
-if __name__ == '__main__':
-
+def run_app():
+    """
+    """
+    st.set_page_config(layout="wide")
     st.title("Bayesian Anscombe's Quartet")
 
     quartet = get_anscombe_quartet()
 
-    col1, col2 = st.beta_columns(2)
     st.sidebar.title('Regression Priors')
     mu_intercept = st.sidebar.slider(
         '\u03BC Intercept',
@@ -222,11 +300,14 @@ if __name__ == '__main__':
         step=0.1
     )
     mu_error = st.sidebar.slider(
-        '\u03B2 Error',
+        '\u03B5',
         min_value=0.1,
         max_value=10.,
         value=1.,
         step=0.1
+    )
+    show_predictions = st.sidebar.checkbox(
+        'Show Predictions'
     )
 
     quartet_traces = get_anscombe_quartet_traces(
@@ -242,14 +323,27 @@ if __name__ == '__main__':
         tune=200
     )
 
+    descriptives = compute_anscombe_descriptives(
+        quartet=quartet,
+        quartet_traces=quartet_traces
+    )
+
     fig = plot_anscombe_quartet(
         quartet=quartet,
         quartet_traces=quartet_traces,
-        nrows=2,
-        ncols=2,
-        figsize=(7, 7),
+        nrows=1,
+        ncols=4,
+        show_predictions=show_predictions,
+        figsize=(12, 3),
         sharex=True,
         sharey=True
     )
 
-    col1.pyplot(fig)
+    st.pyplot(fig)
+    st.dataframe(descriptives)
+
+###############################################################################
+
+
+if __name__ == '__main__':
+    run_app()
