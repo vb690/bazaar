@@ -1,6 +1,7 @@
 numpy
+scipy
+pandas
 pymc3
-matplolib
-seaborn
+matplotlib
 streamlit
 
