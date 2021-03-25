@@ -1,6 +1,6 @@
 ## Bayesian Anscombe's Quartet
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/https://github.com/vb690/bazaar/blob/master/shops/anscombe_quartet/anscombe_app.py)
 
 ### Motivation
 
