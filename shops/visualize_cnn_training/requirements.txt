@@ -1,0 +1,12 @@
+tqdm
+numpy
+scipy
+pandas
+Pillow
+tensorflow
+umap-learn
+streamlit
+matplotlib
+plotly
+
+
