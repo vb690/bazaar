@@ -119,15 +119,15 @@ def visualize_embedding(embedding_df, time_index, selected_images,
 def load_data(dataset_name):
     """Load convolution filters for a given dataset
     """
-    images = np.load(f'results/images/{dataset_name}.npy')
+    images = np.load(f'results//images//{dataset_name}.npy')
 
-    with open(f'results/filters/{dataset_name}_conv_1.pkl', 'rb') as in_conv:
+    with open(f'results//filters//{dataset_name}_conv_1.pkl', 'rb') as in_conv:
         conv_1 = pickle.load(in_conv)
 
-    with open(f'results/filters/{dataset_name}_conv_2.pkl', 'rb') as in_conv:
+    with open(f'results//filters//{dataset_name}_conv_2.pkl', 'rb') as in_conv:
         conv_2 = pickle.load(in_conv)
 
-    embedding_df = pd.read_csv(f'results/embeddings/{dataset_name}.csv')
+    embedding_df = pd.read_csv(f'results//embeddings//{dataset_name}.csv')
 
     return images, conv_1, conv_2, embedding_df
 
@@ -180,7 +180,7 @@ def run_app():
     )
 
     st.title('Convolutional Neural Network Learned Representations')
-    banner = Image.open('images/cite_feu.jpg')
+    banner = Image.open('images//header.png')
     st.image(banner, caption='LeNet-5')
     images, conv_1, conv_2, embedding_df = load_data('fashion_mnist')
 
