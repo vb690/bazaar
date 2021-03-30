@@ -5,4 +5,6 @@ pymc3
 sklearn
 matplotlib
 seaborn
+plotly
+Pillow
 streamlit
