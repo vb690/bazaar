@@ -4,12 +4,15 @@
 
 ### Motivation
 
+This app aims to explore the impact of priors' variation when fitting a simple linear regression (within a bayesian framework) to the Anscombe's Quartet.
+
 ### Features and How to Use
 
-<p align="center">
-  <img src="images/no_pred.png" width="400" />
-  <img src="images/pred.png" width="400" />
-</p>  
+1. Interactive widgets for varying Intercept, Slope and Error priors.
+2. Interactive visualization of the line of best fit and prediction with posterior Highest Density Interval.
+3. Interactive summary table with datasets' statistics and R squared achieved by the linear model.
+
+For Running the app click on the streamlit badge at the top of this page.
 
 ### License
 
