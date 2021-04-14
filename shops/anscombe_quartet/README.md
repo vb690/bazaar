@@ -1,5 +1,9 @@
 ## Bayesian Anscombe's Quartet
 
+<p align="center">
+  <img width="1000" height="300" src="https://github.com/vb690/bazaar/blob/master/shops/anscombe_quartet/images/anscombe_quartet.png">
+<p align="center">
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)  [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/vb690/bazaar/shops/anscombe_quartet/anscombe_app.py)
 
 ### Motivation
