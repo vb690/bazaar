@@ -16,10 +16,13 @@ addprocs(4)
 @everywhere using StatsFuns: logistic
 @everywhere using Turing
 
-@everywhere function get_data(path::String="data//breast_cancer.csv")
+@everywhere function get_data(
+        path::String="data//breast_cancer.csv",
+        y_label::String="diagnosis"
+    )
     df = DataFrame(CSV.File(path))
-    y = df[!, "diagnosis"]
-    X = convert(Matrix, select!(df, Not(:diagnosis)))
+    y = df[!, y_label]
+    X = convert(Matrix, select!(df, Not(:y_label)))
     X = (X .- mean(X, dims=1)) ./ std(X, dims=1)
     return X, y
 
@@ -52,7 +55,7 @@ end
     for iteration in 1:max_iters
 
         time = @elapsed begin
-            sample(
+            traces = sample(
                 logistic_regression(X, y),
                 NUTS(1000, 0.90),
                 MCMCDistributed(),

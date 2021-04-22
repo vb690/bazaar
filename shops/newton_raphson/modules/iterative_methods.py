@@ -1,6 +1,6 @@
 from tqdm import tqdm
 
-from utils import central_difference
+from .utils import central_difference
 
 
 def newton_method(f, x_candidate, tol=1e-10, maxiter=10, verbose=0,

@@ -5,21 +5,22 @@ import pandas as pd
 import pymc3 as pm
 
 
-def get_data(path="data//breast_cancer.csv"):
+def get_data(path='data//breast_cancer.csv', y_label='diagnosis'):
     """Get data for the logistic model
-    
+
     Args:
         path (string): location of the dataset
-        
+
     Returns:
         X (array): array of standardized exogenous variables
         y (array): array of endogenous variables
     """
     df = pd.read_csv('data//breast_cancer.csv')
-    X = df.drop('diagnosis', axis=1).values
+    X = df.drop(y_label, axis=1).values
     X = X - X.mean() / X.std()
-    y = df['diagnosis'].values
+    y = df[y_label].values
     return X, y
+
 
 def logistic_regression(X, y):
     """Create logistic model
@@ -72,15 +73,24 @@ def profiler(X, y, max_iters=10):
         end = time()
         times.append(end - start)
 
-    return times
+    return times, traces
 
 
 def main():
     X, y = get_data()
-    times = profiler(X, y, max_iters=10)
-    print(times)
+    times, traces = profiler(X, y, max_iters=10)
+    traces_summary = pm.summary(traces)
 
-    
+    traces_summary.to_csv(
+        'results//tables//pymc3_traces_summary.csv'
+    )
+    pd.DataFrame(
+        times,
+        columns='timing'
+    ).to_csv('results//tables//pymc3_results.csv', index=False)
+    return None
+
+
 ##############################################################################
 
 
