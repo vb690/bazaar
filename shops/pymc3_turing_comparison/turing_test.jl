@@ -18,11 +18,11 @@ addprocs(4)
 
 @everywhere function get_data(
         path::String="data//breast_cancer.csv",
-        y_label::String="diagnosis"
+        y_label::Symbol=:diagnosis
     )
     df = DataFrame(CSV.File(path))
     y = df[!, y_label]
-    X = convert(Matrix, select!(df, Not(:y_label)))
+    X = convert(Matrix, select!(df, Not(y_label)))
     X = (X .- mean(X, dims=1)) ./ std(X, dims=1)
     return X, y
 
