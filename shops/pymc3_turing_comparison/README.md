@@ -41,3 +41,8 @@ We also compared the two frameworks using the approach presented in [this tuoria
 <p align="center">   
   <img width="900" height="400" src="https://github.com/vb690/bazaar/blob/master/shops/pymc3_turing_comparison/results/figures/posteriors.png">
 </p>   
+
+# To Dos
+
+1. Compute the number of effective samples.
+2. Test the samplers on problems with different level of complexity.
