@@ -1,12 +1,4 @@
 using Distributed
-
-using CSV
-using DataFrames
-
-using StatsFuns: logistic
-
-using Turing
-
 using StatsPlots
 
 addprocs(4)
@@ -25,7 +17,6 @@ addprocs(4)
     X = convert(Matrix, select!(df, Not(y_label)))
     X = (X .- mean(X, dims=1)) ./ std(X, dims=1)
     return X, y
-
 end
 
 @everywhere @model function logistic_regression(
@@ -43,7 +34,6 @@ end
         y[i] ~ Bernoulli(logistic(p[i]))
 
     end
-
 end
 
 @everywhere function profiler(
@@ -54,27 +44,23 @@ end
     times = []
     for iteration in 1:max_iters
 
-        time = @elapsed begin
-            traces = sample(
+        time = @elapsed global trace = sample(
                 logistic_regression(X, y),
-                NUTS(1000, 0.90),
+                NUTS(2, 0.90),
                 MCMCDistributed(),
-                1000,
+                2,
                 4
             )
-        end
         append!(times, time)
-
     end
-    return times
-
+    return times, trace
 end
-
 
 @everywhere function main()
     X, y = get_data()
-    times = profiler(X, y)
+    times, traces = profiler(X, y)
     println(times)
+    return times, traces
 end
 
-main()
+times, traces = main()
