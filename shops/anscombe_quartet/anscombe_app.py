@@ -12,6 +12,17 @@ import streamlit as st
 @st.cache
 def compute_r2(y, y_hat):
     """
+    Computing the coefficient of determination give y and y_hat. This is
+    the proportion of the variance in the dependent variable that is
+    predictable from the independent variable.
+
+        Args:
+            - y: is an array-like indicating the values of the dependent
+                variable.
+            - y_hat: is an array-like indicating the estimated values.
+
+        Returns:
+            - r2: is a float indicating the coefficient of determination
     """
     ss_res = np.sum((y - y_hat) ** 2)
     ss_tot = np.sum((y - np.mean(y)) ** 2)
@@ -21,7 +32,19 @@ def compute_r2(y, y_hat):
 
 @st.cache
 def compute_anscombe_descriptives(quartet, quartet_traces):
-    """
+    """Compute a series of descriptive statistics from the 4 anscombe's
+    datasets and the linear models associated to them.
+
+        Args:
+            - quartet: is a dictionary containing the 4 anscombe' datasets as
+                produced by get_anscombe_quartet.
+            - quartet_traces: is a dictionary containing PyMC3 multitrace
+                obejcts obtainined by fitting a linear model to each of the
+                anscombe's datasets.
+
+        Returns:
+            - descriptives: is a pandas DataFrame reporting mean, variance,
+                correlation and R^2 for each of the anscombe's datasets.
     """
     descriptives = pd.DataFrame(
         columns=[
@@ -106,7 +129,23 @@ def get_anscombe_quartet():
 
 def linear_regression(x, y, mu_intercept, sd_intercept,
                       mu_slope, sd_slope, mu_error,  **kwargs):
-    """
+    """Fit a linear regression within a Bayesian framework. All the priors are
+    assumed to be gaussians excpet for the erro which is HalfCauchy
+    distributed.
+
+        Args:
+            - x: a numpy array specifying values for the indipendent variable.
+            - y: a numpy array specifying values for the dependent variable.
+            - mu_intercept: a float specifying the mu for the intercept prior.
+            - sd_intercept: a float specifying the sd for the intercept prior.
+            - mu_slope: a float specifying the mu for the slope prior.
+            - sd_slope: a float specifying the sd for the slope prior.
+            - mu_error: a float specifying the mu for the error prior.
+            - **kwrgs: keeyward arguments passed to PyMC3 sample function.
+
+        Returns:
+            - trace: a PyMC3 multitrace object containing the posteriro for all
+                the estimated parameters for the regression model.
     """
     with pm.Model() as linear_model:
 
@@ -158,7 +197,22 @@ def linear_regression(x, y, mu_intercept, sd_intercept,
 
 def get_anscombe_quartet_traces(quartet, mu_intercept=0, sd_intercept=1,
                                 mu_slope=0, sd_slope=1, mu_error=1, **kwargs):
-    """
+    """Fit a bayesian linear regression to each anscombe's dataset and return
+    the relative multitrace.
+
+        Args:
+            -quartet: is a dictionary containing the 4 anscombe' datasets as
+                produced by get_anscombe_quartet.
+            - mu_intercept: a float specifying the mu for the intercept prior.
+            - sd_intercept: a float specifying the sd for the intercept prior.
+            - mu_slope: a float specifying the mu for the slope prior.
+            - sd_slope: a float specifying the sd for the slope prior.
+            - mu_error: a float specifying the mu for the error prior.
+            - **kwrgs: keeyward arguments passed to PyMC3 sample function.
+
+        Returns:
+            - quartet_traces: is a dictionary where keys are names of
+                anscombe datasets value PyMC3 multitrace objects.
     """
     quartet_traces = {}
     for component, dataset in quartet.items():
@@ -182,8 +236,8 @@ def plot_anscombe_quartet(quartet, quartet_traces, show_predictions, **kwargs):
 
     Args:
         - quartet: a disctionary, anscombe quartet produced by
-                   get_anscombe_quartet()
-        - kwargs: keyward arguments to be passed to plt.subplots()
+                   get_anscombe_quartet
+        - kwargs: keyward arguments to be passed to plt.subplots
 
     Returns:
         - fig: a matplolib figure obejct containing the anscombe plot.
@@ -263,7 +317,7 @@ def plot_anscombe_quartet(quartet, quartet_traces, show_predictions, **kwargs):
 
 
 def run_app():
-    """
+    """Function running the streamlit app
     """
     st.set_page_config(layout="wide")
     st.title("Bayesian Anscombe's Quartet")

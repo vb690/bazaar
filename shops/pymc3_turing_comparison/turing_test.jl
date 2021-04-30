@@ -65,7 +65,8 @@ end
 # Arguments:
 - `X::Matrix{Float64}`: Exogenous variables
 - `y::Matrix{Int64}`: Endogenous variables
-- `max_iters::Int64`: The specified number of iterations to execute the sampler for logistic regression.
+- `max_iters::Int64`: The specified number of iterations to execute the
+    sampler for logistic regression.
 
 # Returns:
 - `times::Vector{Any}`: Execution times for each iteration.
