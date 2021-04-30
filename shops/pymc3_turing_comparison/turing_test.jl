@@ -18,11 +18,11 @@ addprocs(4)
 
 @everywhere function get_data(
         path::String="data//breast_cancer.csv",
-        y_label::String="diagnosis"
+        y_label::Symbol=:diagnosis
     )
     df = DataFrame(CSV.File(path))
     y = df[!, y_label]
-    X = convert(Matrix, select!(df, Not(:y_label)))
+    X = convert(Matrix, select!(df, Not(y_label)))
     X = (X .- mean(X, dims=1)) ./ std(X, dims=1)
     return X, y
 
@@ -57,23 +57,23 @@ end
         time = @elapsed begin
             traces = sample(
                 logistic_regression(X, y),
-                NUTS(1000, 0.90),
+                NUTS(10, 0.90),
                 MCMCDistributed(),
-                1000,
+                10,
                 4
             )
         end
         append!(times, time)
 
     end
-    return times
+    return times, traces
 
 end
 
 
 @everywhere function main()
     X, y = get_data()
-    times = profiler(X, y)
+    times, traces = profiler(X, y)
     println(times)
 end
 
