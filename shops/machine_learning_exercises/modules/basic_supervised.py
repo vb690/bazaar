@@ -178,7 +178,7 @@ class BernulliNaiveBayes:
         for label, probabilities in self.features_probabilities.items():
 
             likelihood = np.prod(
-                [self.compute_bernulli_pdf(x, probability) for x, probability in
+                [self.compute_bernulli_pdf(x, prob) for x, prob in
                  zip(input_X, probabilities)
                  ]
             )
@@ -191,7 +191,8 @@ class BernulliNaiveBayes:
         labels_likelihoods = self._compute_likelihoods(input_X)
         for label, probability in self.labels_probabilities.items():
 
-            labels_joint_probabilities[label] = probability*labels_likelihoods[label]
+            labels_joint_probabilities[label] = \
+                probability*labels_likelihoods[label]
 
         return labels_joint_probabilities
 
@@ -291,7 +292,8 @@ class GaussianNaiveBayes:
         labels_likelihoods = self._compute_likelihoods(input_X)
         for label, probability in self.labels_probabilities.items():
 
-            labels_joint_probabilities[label] = probability*labels_likelihoods[label]
+            labels_joint_probabilities[label] = \
+                probability*labels_likelihoods[label]
 
         return labels_joint_probabilities
 

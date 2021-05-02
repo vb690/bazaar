@@ -3,9 +3,16 @@ from sklearn.datasets import make_classification
 from .scorer import Scorer
 
 
-def test_classification(models, one_hot=False):
-    '''
-    '''
+def test_classification(models):
+    """Function for testing a set of models on a classification task.
+
+        Args:
+            - models: is a dictionary where keys are model names and values
+                are instatiated models.
+
+        Returns:
+            - None
+    """
     for name, model in models.items():
 
         X, y = make_classification(
@@ -29,3 +36,5 @@ def test_classification(models, one_hot=False):
         print(f'Precision: {scorer.precision()}')
         print(f'Recall: {scorer.recall()}')
         print('')
+
+    return None
