@@ -1,7 +1,5 @@
 # PyMC3 vs Turing.jl <br /> The fastest sampler alive.
 
-**This project is still WIP**
-
 # Motivation
 
 This small project aims to compare the speed of the [No U-Turn-Sampler (NUTS)](https://arxiv.org/abs/1111.4246) in [PyMC3](https://docs.pymc.io/) and [Turing.jl](https://turing.ml/dev/) when fitting a logistic regression to the [Breast Cancer Wisconsin (Diagnostic) Data Set](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic)).
@@ -41,8 +39,3 @@ We also compared the two frameworks using the approach presented in [this tuoria
 <p align="center">   
   <img width="900" height="400" src="https://github.com/vb690/bazaar/blob/master/shops/pymc3_turing_comparison/results/figures/posteriors.png">
 </p>   
-
-# To Dos
-
-1. Compute the number of effective samples.
-2. Test the samplers on problems with different level of complexity.
