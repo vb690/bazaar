@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 
 
-def plot_solution(f, x, solution):
+def plot_solution(f, x, solution, **kwargs):
     """Plot the solution reached for f given the x starting point
 
     Args:
@@ -13,9 +13,9 @@ def plot_solution(f, x, solution):
     Returns:
         fig: a matplotlib figure
     """
-    range_x = [i for i in range(-x, x)]
-    f_x = [f(i) for i in range_x]
-    f_solution = f(solution)
+    range_x = [i for i in range(-x, x*2)]
+    f_x = [f(i, **kwargs) for i in range_x]
+    f_solution = f(solution, **kwargs)
 
     fig = plt.figure(figsize=(5, 5))
     plt.plot(
@@ -34,7 +34,7 @@ def plot_solution(f, x, solution):
     return fig
 
 
-def central_difference(f, x, h=1e-10):
+def central_difference(f, x, h=1e-10, **kwargs):
     """Central difference method for approximating the derivartive of f
 
     Args:
@@ -45,5 +45,5 @@ def central_difference(f, x, h=1e-10):
     Returns:
         f_prime: approximation of the derivative of f
     """
-    f_prime = (f(x+h) - f(x)) / h
+    f_prime = (f(x+h, **kwargs) - f(x, **kwargs)) / h
     return f_prime

@@ -2,6 +2,8 @@
 
 class Scorer:
     def __init__(self, predicted, ground_truth):
+        """
+        """
         self.ground_truth = ground_truth
         self.predicted = predicted
         self.false_positives = sum(

@@ -4,7 +4,7 @@ from .utils import central_difference
 
 
 def newton_method(f, x_candidate, tol=1e-10, maxiter=10, verbose=0,
-                  return_history=True):
+                  return_history=True, **kwargs):
     """Iterative algorithm for finding the root of f
 
     Args:
@@ -28,7 +28,7 @@ def newton_method(f, x_candidate, tol=1e-10, maxiter=10, verbose=0,
     solutions = []
     for iteration in tqdm(range(int(maxiter))):
 
-        x_new = x - f(x) / central_difference(f, x)
+        x_new = x - f(x, **kwargs) / central_difference(f, x, **kwargs)
         solutions.append(x_new)
         tol_new = abs(x_new - x)
         x = x_new
