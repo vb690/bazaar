@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 
 
-def plot_solution(f, x, solution, **kwargs):
+def plot_solution(f, solution, approx_solution, **kwargs):
     """Plot the solution reached for f given the x starting point
 
     Args:
@@ -13,9 +13,13 @@ def plot_solution(f, x, solution, **kwargs):
     Returns:
         fig: a matplotlib figure
     """
-    range_x = [i for i in range(-x, x*2)]
+    range_x = [
+        i for i in range(
+            int(solution-(abs(solution+1))), int(solution+(abs(solution+1)))
+        )
+    ]
     f_x = [f(i, **kwargs) for i in range_x]
-    f_solution = f(solution, **kwargs)
+    f_solution = f(approx_solution, **kwargs)
 
     fig = plt.figure(figsize=(5, 5))
     plt.plot(
@@ -23,10 +27,10 @@ def plot_solution(f, x, solution, **kwargs):
         f_x,
     )
     plt.scatter(
-        solution,
+        approx_solution,
         f_solution,
         c='r',
-        label=f'Reached minimum at {solution}'
+        label=f'Reached minimum at {approx_solution}'
     )
     plt.xlabel('$X$')
     plt.ylabel('$f(X)$')
