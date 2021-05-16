@@ -10,7 +10,7 @@ y = np.random.normal(10, 1, size=100)
 
 plt.plot(mcmc(
     y=y,
-    samples=5000
+    samples=1000
 ))
 plt.show()
 

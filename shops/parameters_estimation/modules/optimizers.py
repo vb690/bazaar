@@ -4,6 +4,7 @@ import numpy as np
 from scipy.stats import norm
 
 from .utils import central_difference
+from .functions import normal_log_likelyhood
 
 
 def newton_method(f, x_candidate, tol=1e-10, maxiter=10, verbose=0,
@@ -46,40 +47,43 @@ def newton_method(f, x_candidate, tol=1e-10, maxiter=10, verbose=0,
         return x
 
 
-def mcmc(y, samples=1000, mu_init=0, warm_up=1000,
-         proposal_width=5, mu_prior_mu=0, mu_prior_sd=10):
+def mcmc(y, mu_init=0, warm_up=1000, samples=1000,
+         proposal_width=0.1, prior_mu=0, prior_sigma=10):
     """
     """
     mu_current = mu_init
-    posterior = [mu_current]
+    trace = [mu_current]
     for sample in tqdm(range(warm_up + samples)):
 
         # suggest new position
         mu_proposal = norm(mu_current, proposal_width).rvs()
 
         # Compute likelihoods
-        likelihood_current = norm(mu_current, 1).logpdf(y).sum()
-        likelihood_proposal = norm(mu_proposal, 1).logpdf(y).sum()
+        ll_current = normal_log_likelyhood(
+            mu=mu_current,
+            sigma=1,
+            y=y
+        )
+        ll_proposal = normal_log_likelyhood(
+            mu=mu_proposal,
+            sigma=1,
+            y=y
+        )
 
         # Compute prior probability of current and proposed mu
-        prior_current = norm(mu_prior_mu, mu_prior_sd).pdf(mu_current)
-        prior_proposal = norm(mu_prior_mu, mu_prior_sd).pdf(mu_proposal)
+        prior_current = norm(prior_mu, prior_sigma).logpdf(mu_current)
+        prior_proposal = norm(prior_mu, prior_sigma).logpdf(mu_proposal)
 
-        p_current = likelihood_current * prior_current
-        p_proposal = likelihood_proposal * prior_proposal
+        p_current = ll_current + prior_current
+        p_proposal = ll_proposal + prior_proposal
 
-        # Accept proposal?
-        p_accept = p_proposal / p_current
-
-        # Usually would include prior probability,
-        # which we neglect here for simplicity
-        accept = np.random.rand() < p_accept
-
-        if accept:
-            # Update position
+        if p_proposal > p_current:
             mu_current = mu_proposal
+        else:
+            if np.random.rand() < np.exp(p_proposal - p_current):
+                mu_current = mu_proposal
 
         if sample > warm_up:
-            posterior.append(mu_current)
+            trace.append(mu_current)
 
-    return np.array(posterior)
+    return np.array(trace[1:])
