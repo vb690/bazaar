@@ -1,1 +1,1 @@
-# Newton–Raphson Method
+# Estimating μ given a set of observations 
