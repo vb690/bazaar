@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from modules.functions import normal_log_likelyhood
-from modules.optimizers import newton_method, mcmc
+from modules.optimizers import newton_raphson, mcmc
 from modules.utils import plot_solution
 
 y = np.random.normal(10, 1, size=100)
@@ -14,7 +14,7 @@ plt.plot(mcmc(
 ))
 plt.show()
 
-solution = newton_method(
+solution = newton_raphson(
     normal_log_likelyhood,
     x_candidate=1,
     maxiter=1000,
