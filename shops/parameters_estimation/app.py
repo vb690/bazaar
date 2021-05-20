@@ -2,30 +2,28 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-from modules.functions import normal_log_likelyhood
-from modules.optimizers import newton_raphson, mcmc
+from modules.optimizers import maximum_likelyhood, metropolis_hastings
 from modules.utils import plot_solution
 
 y = np.random.normal(10, 1, size=100)
 
-plt.plot(mcmc(
+mcmc_mu = metropolis_hastings(
     y=y,
     samples=1000
-))
-plt.show()
-
-solution = newton_raphson(
-    normal_log_likelyhood,
-    x_candidate=1,
-    maxiter=1000,
-    return_history=False,
-    y=y
 )
 fig = plot_solution(
-    f=normal_log_likelyhood,
-    solution=10,
-    approx_solution=solution,
-    y=y
+    mu=10,
+    variance=1,
+    approx_solution=mcmc_mu
 )
-
+plt.show()
+mle_mu = maximum_likelyhood(
+    y=y,
+    boot=1000
+)
+fig = plot_solution(
+    mu=10,
+    variance=1,
+    approx_solution=mle_mu
+)
 plt.show()

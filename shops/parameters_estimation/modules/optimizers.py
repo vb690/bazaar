@@ -1,57 +1,75 @@
 from tqdm import tqdm
 
+import math as m
+
 import numpy as np
 from scipy.stats import norm
 
 from .utils import central_difference
-from .functions import normal_log_likelyhood
+from .log_likelyhoods import normal_log_likelyhood
 
 
-def newton_raphson(f, x_candidate, tol=1e-4, maxiter=10, verbose=0,
-                   return_history=True, **kwargs):
-    """Iterative algorithm for finding the root of f
+def maximum_likelyhood(y, mu_init=0., tol=1e-4, maxiter=100, verbose=0,
+                       boot=1000):
+    """Maximum likelyhood estimation of mu using newton rhapson. This is going
+    to be ugly as we will bootstrap for obtining the Confidence interval
 
     Args:
-        f: a function taking x_candidate as input
-        x_candidate: an int or float, intial guess for the solution
+        y: a numpy array of the observed samples originated by the distribution
+            we are trying to approximate.
+        mu_init: a float, initial guess for the parameter mu.
         tol: a float controlling the minimum improvement for determining
              the convergence of the algorithm
         maxiter: an int controlling the maximum number of iterations before the
                  the algorithm performs before stopping
         verbose: an int controlling the ammount of information logged
                  during iteration
-        return_history: a bolean specifying if the list of possible solutions
-                        is returned
+        boot: an int, number of time we will compute the maximum_likelyhood
+        from a bootstrap sample
+
 
     Returns:
-        x: an int or float reporting the solution found by the algorithm
-        solutions: a list of int or floats containing the sequence of solutions
-                   found during the iteration
+        bootstrapped_mus: a list or float reporting the bootstrapped value of
+        mu.
     """
-    x = x_candidate
-    solutions = []
-    for iteration in tqdm(range(int(maxiter))):
+    bootstrapped_mus = []
+    for n in tqdm(range(boot)):
 
-        x_new = x - f(x, **kwargs) / central_difference(f, x, **kwargs)
-        solutions.append(x_new)
-        tol_new = abs(x_new - x)
-        x = x_new
-        if verbose > 0:
-            print(f'Tol {tol_new} - Solution {x_new}')
-        if tol_new < tol:
-            break
+        mu_current = mu_init
+        bootstrap_sample = np.random.choice(y, len(y))
 
-    if return_history:
-        return x, solutions
-    else:
-        return x
+        for iteration in range(int(maxiter)):
+
+            derivative = central_difference(
+                f=normal_log_likelyhood,
+                x=mu_current,
+                y=bootstrap_sample
+            )
+            if m.isclose(derivative, 0):
+                print('Warning, derivative is zero')
+                return mu_current
+
+            mu_new = mu_current - \
+                normal_log_likelyhood(mu=mu_current, y=bootstrap_sample) \
+                / derivative
+            tol_new = abs(mu_new - mu_current)
+            mu_current = mu_new
+
+            if verbose > 0:
+                print(f'Tol {tol_new} - Solution {mu_current}')
+            if tol_new < tol:
+                break
+
+        bootstrapped_mus.append(mu_current)
+
+    return np.array(bootstrapped_mus)
 
 
 def metropolis_hastings(y, mu_init=0., warm_up=1000, samples=1000,
                         proposal_width=0.1, prior_mu=0., prior_sigma=10.):
-    """Markov Chain Monte Carlo for approximating the posterior distribution
-    of the parameters defining the distribution that generated y. In
-    reality we are simplifying the task here assuming sigma being fixed and
+    """Markov Chain Monte Carlo method for approximating the posterior
+    distribution of the parameters defining the distribution that generated y.
+    In reality we are simplifying the task here assuming sigma being fixed and
     trying to approximate the posterior for mu.
 
     Args:

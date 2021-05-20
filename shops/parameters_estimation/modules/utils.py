@@ -1,39 +1,20 @@
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
-def plot_solution(f, solution, approx_solution, **kwargs):
+def plot_solution(mu, variance, approx_solution, **kwargs):
     """Plot the solution reached for f given the x starting point
-
-    Args:
-        f: a function taking x as input
-        x: an int or a float initial guess for the solution
-        solution: an int or a float solution reached by the algorithm
-
-    Returns:
-        fig: a matplotlib figure
     """
-    range_x = [
-        i for i in range(
-            int(solution-(abs(solution+1))), int(solution+(abs(solution+1)))
-        )
-    ]
-    f_x = [f(i, **kwargs) for i in range_x]
-    f_solution = f(approx_solution, **kwargs)
-
     fig = plt.figure(figsize=(5, 5))
-    plt.plot(
-        range_x,
-        f_x,
+    sns.kdeplot(
+        approx_solution
     )
-    plt.scatter(
-        approx_solution,
-        f_solution,
+    plt.axvline(
+        mu,
         c='r',
-        label=f'Reached minimum at {approx_solution}'
+        label=f'Original mu {mu}'
     )
-    plt.xlabel('$X$')
-    plt.ylabel('$f(X)$')
     plt.legend()
     return fig
 
