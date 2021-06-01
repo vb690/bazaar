@@ -5,12 +5,15 @@ import math as m
 import numpy as np
 from scipy.stats import norm
 
+import streamlit as st
+
 from .utils import central_difference
 from .log_likelyhoods import normal_log_likelyhood
 
 
+@st.cache
 def maximum_likelyhood(y, mu_init=0., tol=1e-4, maxiter=100, verbose=0,
-                       boot=1000):
+                       boot=100):
     """Maximum likelyhood estimation of mu using newton rhapson. This is going
     to be ugly as we will bootstrap for obtining the Confidence interval
 
@@ -65,6 +68,7 @@ def maximum_likelyhood(y, mu_init=0., tol=1e-4, maxiter=100, verbose=0,
     return np.array(bootstrapped_mus)
 
 
+@st.cache
 def metropolis_hastings(y, mu_init=0., warm_up=1000, samples=1000,
                         proposal_width=0.1, prior_mu=0., prior_sigma=10.):
     """Markov Chain Monte Carlo method for approximating the posterior

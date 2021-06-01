@@ -2,7 +2,10 @@ import numpy as np
 
 from scipy.stats import norm
 
+import streamlit as st
 
+
+@st.cache
 def normal_log_likelyhood(mu, y, sigma=1):
     """Function returning the log-likelyhood of y given a adtribution with mu
     and sigma parameters.

@@ -1,6 +1,7 @@
-
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+import streamlit as st
 
 
 def plot_solution(mu, variance, approx_solution, **kwargs):
@@ -19,6 +20,7 @@ def plot_solution(mu, variance, approx_solution, **kwargs):
     return fig
 
 
+@st.cache
 def central_difference(f, x, h=1e-10, **kwargs):
     """Central difference method for approximating the derivartive of f
 
