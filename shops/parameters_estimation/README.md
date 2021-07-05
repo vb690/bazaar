@@ -1,1 +1,4 @@
-# Estimating μ given a set of observations 
+# Maximum Likelyhood vs Bayesian Parameter Estimation
+## Motivation
+## Features
+## How to Use
