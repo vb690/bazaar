@@ -3,7 +3,7 @@ from sklearn.datasets import make_classification
 from .scorer import Scorer
 
 
-def test_classification(models):
+def test_classification(models, **kwargs):
     """Function for testing a set of models on a classification task.
 
         Args:
@@ -16,9 +16,7 @@ def test_classification(models):
     for name, model in models.items():
 
         X, y = make_classification(
-            n_samples=10000,
-            n_features=10,
-            n_redundant=4
+            **kwargs
         )
 
         for train_i, test_i in StratifiedShuffleSplit().split(X, y):
