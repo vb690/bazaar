@@ -26,5 +26,5 @@ conda install -c conda-forge --file requirements.txt
 ```
 4. Run the app through
 ```sh
-streamlit run app.py
+streamlit run estimator_app.py
 ```
