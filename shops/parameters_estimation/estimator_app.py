@@ -2,7 +2,7 @@ import numpy as np
 
 import streamlit as st
 
-from modules.optimizers import maximum_likelyhood, metropolis_hastings
+from modules.estimators import maximum_likelyhood, metropolis_hastings
 from modules.utils import plot_solution
 
 
