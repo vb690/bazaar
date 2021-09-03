@@ -1,4 +1,5 @@
 # PyMC3 vs Turing.jl <br /> The fastest sampler alive.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Motivation
 
