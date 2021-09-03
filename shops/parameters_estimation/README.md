@@ -1,6 +1,7 @@
 # Maximum Likelyhood vs Bayesian Parameter Estimation
 ## Motivation
 This small projects aims to compare the results provided by Maximum Likelyhood and Metropolis Hastings in estimating the parameter `mu` of a normal distribution with unit scale.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
