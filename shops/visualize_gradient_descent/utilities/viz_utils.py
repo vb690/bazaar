@@ -1,6 +1,7 @@
 import os
 
 import numpy as np
+from scipy.interpolate import griddata
 
 from sklearn.preprocessing import KBinsDiscretizer
 
@@ -9,9 +10,9 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 
-def save_animation(embeddings, emb_space_sizes, train_losses, test_losses,
-                   opt_name, n_bins=10, horizon_size=10, cmap_name='jet',
-                   **plotting_kwargs):
+def save_3D_animation(embeddings, emb_space_sizes, train_losses, test_losses,
+                      opt_name, n_bins=10, horizon_size=10, cmap_name='jet',
+                      **plotting_kwargs):
     """Utility function for saving the weights changes during training in UMAP
     projection.
 
@@ -115,9 +116,114 @@ def save_animation(embeddings, emb_space_sizes, train_losses, test_losses,
                 axs[index].set_ylabel('Weights Space \n UMAP 2')
                 axs[index].set_zlabel('Trainining Loss')
 
-        if not os.path.exists(f'results\\{opt_name}'):
-            os.makedirs(f'results\\{opt_name}')
-        plt.savefig(f'results\\{opt_name}\\{i}.png', bbox_inches='tight')
+        if not os.path.exists(f'results\\3D_{opt_name}'):
+            os.makedirs(f'results\\3D_{opt_name}')
+        plt.savefig(f'results\\3D_{opt_name}\\{i}.png', bbox_inches='tight')
         plt.close('all')
+
+    return None
+
+
+def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
+                      total_train_losses, total_test_losses, opt_name,
+                      n_bins=100, cmap_name='jet', **plotting_kwargs):
+    """
+    """
+    fig, axs = plt.subplots(1, 3, figsize=(15, 5))
+    axs = axs.flatten()
+
+    Z = np.array(total_train_losses).flatten()
+    Z = (Z - Z.mean()) / Z.std()
+
+    for layer, emb in enumerate(embeddings):
+
+        x = emb[:, 0]
+        y = emb[:, 1]
+
+        xi = np.linspace(
+            x.min(),
+            x.max(),
+            1000
+        )
+        yi = np.linspace(
+            y.min(),
+            y.max(),
+            1000
+        )
+        x_grid, Y_grid = np.meshgrid(xi, yi)
+
+        zi = griddata(
+            (x, y),
+            Z,
+            (xi[None, :], yi[:, None]),
+            method='linear'
+        )
+        zi = np.nan_to_num(zi, 0)
+
+        axs[layer].contourf(
+            x_grid,
+            Y_grid,
+            zi,
+            cmap=cmap_name,
+            levels=n_bins,
+            vmin=Z.min(),
+            vmax=Z.max()
+        )
+
+    for index, opt_name in enumerate(target_optimizers):
+
+        emb_size = len(total_test_losses[index])
+        start = emb_size * index
+        stop = start + emb_size
+        embs = [emb[start:stop] for emb in embeddings]
+
+        for ax_idx, ax in enumerate(axs):
+
+            ax.set_title(
+                f'{opt_name} - Layer {ax_idx + 1}'
+            )
+            if ax_idx == 0:
+                ax.set_ylabel('Weights Space \n UMAP 2')
+                ax.set_xlabel('Weights Space \n UMAP 1')
+            else:
+                ax.set_xlabel('Weights Space \n UMAP 1')
+
+        for i in range(embs[0].shape[0]):
+
+            point_1 = axs[0].scatter(
+                embs[0][i, 0],
+                embs[0][i, 1],
+                marker="*",
+                c='white',
+                edgecolor='k',
+                s=60
+            )
+            point_2 = axs[1].scatter(
+                embs[1][i, 0],
+                embs[1][i, 1],
+                c='white',
+                marker="*",
+                edgecolor='k',
+                s=60
+            )
+            point_3 = axs[2].scatter(
+                embs[2][i, 0],
+                embs[2][i, 1],
+                c='white',
+                marker="*",
+                edgecolor='k',
+                s=60
+            )
+
+            if not os.path.exists(f'results\\2D_{opt_name}'):
+                os.makedirs(f'results\\2D_{opt_name}')
+            plt.savefig(
+                f'results\\2D_{opt_name}\\{i}.png',
+                bbox_inches='tight'
+            )
+
+            point_1.remove()
+            point_2.remove()
+            point_3.remove()
 
     return None

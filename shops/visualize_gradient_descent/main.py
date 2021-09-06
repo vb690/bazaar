@@ -15,7 +15,7 @@ import matplotlib
 import seaborn as sns
 
 from utilities.models_utils import build_MLP, get_weights
-from utilities.viz_utils import save_animation
+from utilities.viz_utils import save_3D_animation, save_2D_animation
 
 ###############################################################################
 
