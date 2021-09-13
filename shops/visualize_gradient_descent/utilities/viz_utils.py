@@ -13,8 +13,9 @@ import matplotlib
 def save_3D_animation(embeddings, emb_space_sizes, train_losses, test_losses,
                       opt_name, n_bins=10, horizon_size=10, cmap_name='jet',
                       **plotting_kwargs):
-    """Utility function for saving the weights changes during training in UMAP
-    projection.
+    """Utility function for visualizing the changes in weights over time in
+    UMAP space. The visualization is in 3D for better appreciating the descent
+    on the error surface.
 
         Args:
             - embeddings: list of embeddings, result of alligned UMAP
@@ -125,15 +126,33 @@ def save_3D_animation(embeddings, emb_space_sizes, train_losses, test_losses,
 
 
 def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
-                      total_train_losses, total_test_losses, opt_name,
+                      total_train_losses, total_test_losses,
                       n_bins=100, cmap_name='jet', **plotting_kwargs):
-    """
+    """Utility function for visualizing the changes in weights over time in
+    UMAP space. The visualization is in 2D for better appreciating the global
+    loss surface.
+
+        Args:
+            - embeddings: list of embeddings, result of alligned UMAP
+            - target_optimizers: list of strings, name of the optimizers
+                considered.
+            - emb_space_sizes: list of arrays, define the limits of the
+                embedding space for the three layers of the MLP.
+            - total_train_losses: list, training losses history.
+            - total_test_losses: list, test losses.
+            - n_bins: int, number of bins for discretizing the training loss.
+            - cmap_name: string, name of the colormap used for representing
+                the change in train losses.
+            - **plotting_kwargs: keyword arguments, keyword arguments for the
+                plotting function.
+
+        Returns:
+            - None
     """
     fig, axs = plt.subplots(1, 3, figsize=(15, 5))
     axs = axs.flatten()
 
     Z = np.array(total_train_losses).flatten()
-    Z = (Z - Z.mean()) / Z.std()
 
     for layer, emb in enumerate(embeddings):
 
@@ -158,9 +177,9 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
             (xi[None, :], yi[:, None]),
             method='linear'
         )
-        zi = np.nan_to_num(zi, 0)
+        zi = np.nan_to_num(zi, nan=Z.mean())
 
-        axs[layer].contourf(
+        cont = axs[layer].contourf(
             x_grid,
             Y_grid,
             zi,
@@ -169,6 +188,14 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
             vmin=Z.min(),
             vmax=Z.max()
         )
+
+    fig.subplots_adjust(right=0.85)
+    cbar_ax = fig.add_axes([0.88, 0.15, 0.04, 0.7])
+    fig.colorbar(
+        cont,
+        cax=cbar_ax,
+        label='Training Loss'
+    )
 
     for index, opt_name in enumerate(target_optimizers):
 
@@ -180,7 +207,7 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
         for ax_idx, ax in enumerate(axs):
 
             ax.set_title(
-                f'{opt_name} - Layer {ax_idx + 1}'
+                f'Layer {ax_idx + 1}'
             )
             if ax_idx == 0:
                 ax.set_ylabel('Weights Space \n UMAP 2')

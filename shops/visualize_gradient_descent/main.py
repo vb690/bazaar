@@ -17,16 +17,6 @@ import seaborn as sns
 from utilities.models_utils import build_MLP, get_weights
 from utilities.viz_utils import save_3D_animation, save_2D_animation
 
-###############################################################################
-
-os.environ['PYTHONHASHSEED'] = '0'
-
-np.random.seed(37)
-rn.seed(1254)
-tf.random.set_seed(89)
-
-##############################################################################
-
 
 # det the aesthetics for the plot
 def sns_styleset():
@@ -53,8 +43,8 @@ sns_styleset()
 
 # ########################### DEFINE VARIABLES ################################
 
-epochs = 3
-batch_size = 250
+epochs = 5
+batch_size = 100
 
 target_optimizers = {
     'SGD': 'SGD',
@@ -145,7 +135,7 @@ for index, opt_name in enumerate(target_optimizers.keys()):
     start = emb_size * index
     stop = start + emb_size
 
-    save_animation(
+    save_3D_animation(
         [emb[start:stop] for emb in mapper.embeddings_],
         emb_space_sizes=emb_space_sizes,
         train_losses=total_train_losses[index],
@@ -155,3 +145,21 @@ for index, opt_name in enumerate(target_optimizers.keys()):
         n_bins=20,
         s=20
     )
+
+save_2D_animation(
+    embeddings=mapper.embeddings_,
+    target_optimizers=[
+        'SGD',
+        'SGD(momentum=0.1)',
+        'SGD(netserov momentum=0.1)',
+        'SGD(lr=1)',
+        'SGD(lr=1e-6)',
+        'Adam',
+        'FTRL'
+    ],
+    emb_space_sizes=emb_space_sizes,
+    total_train_losses=total_train_losses,
+    total_test_losses=total_test_losses,
+    n_bins=100,
+    cmap_name='jet'
+)
