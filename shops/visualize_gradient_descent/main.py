@@ -1,14 +1,11 @@
 import numpy as np
-import os
-
-import tensorflow as tf
-import random as rn
 
 from umap import AlignedUMAP
 
 from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import SGD, Adam
 from tensorflow.keras.datasets import fashion_mnist
+from tensorflow_addons.optimizers import CyclicalLearningRate
 
 import matplotlib
 
@@ -43,8 +40,23 @@ sns_styleset()
 
 # ########################### DEFINE VARIABLES ################################
 
-epochs = 5
-batch_size = 100
+(X_tr, y_tr), (X_ts, y_ts) = fashion_mnist.load_data()
+X_tr = X_tr.reshape(-1, 28*28)
+scaler = StandardScaler().fit(X_tr)
+X_tr = scaler.transform(X_tr)
+X_ts = X_ts.reshape(-1, 28*28)
+X_ts = scaler.transform(X_ts)
+
+epochs = 6
+batch_size = 200
+
+cyclical_learning_rate = CyclicalLearningRate(
+    initial_learning_rate=1e-6,
+    maximal_learning_rate=1e-4,
+    step_size=(X_tr.shape[0] // batch_size) * 2,
+    scale_fn=lambda x: 1 / (2.0 ** (x - 1)),
+    scale_mode='cycle'
+)
 
 target_optimizers = {
     'SGD': 'SGD',
@@ -53,17 +65,11 @@ target_optimizers = {
     'SGD(lr=1)': SGD(lr=1.),
     'SGD(lr=1e-6)': SGD(lr=0.000001),
     'Adam': 'adam',
+    'Adam CLR': Adam(learning_rate=cyclical_learning_rate),
     'FTRL': 'Ftrl'
 }
 
-(X_tr, y_tr), (X_ts, y_ts) = fashion_mnist.load_data()
-X_tr = X_tr.reshape(-1, 28*28)
-scaler = StandardScaler().fit(X_tr)
-X_tr = scaler.transform(X_tr)
-X_ts = X_ts.reshape(-1, 28*28)
-X_ts = scaler.transform(X_ts)
-
-# ###########################MODEL TRAINING ###################################
+# ########################### MODEL TRAINING ##################################
 
 total_weights = []
 total_train_losses = []
