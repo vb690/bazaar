@@ -1,7 +1,5 @@
 import os
 
-import tqdm
-
 import numpy as np
 from scipy.interpolate import griddata
 
@@ -48,7 +46,7 @@ def save_3D_animation(embeddings, emb_space_sizes, train_losses, test_losses,
     colors = discretizer.fit_transform(colors.reshape(-1, 1)).flatten()
     norm = plt.Normalize(colors.min(), colors.max())
 
-    for i in tqdm(range(embeddings[0].shape[0])):
+    for i in range(embeddings[0].shape[0]):
 
         fig, axs = plt.subplots(
             1,
@@ -201,8 +199,6 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
 
     for index, opt_name in enumerate(target_optimizers):
 
-        print(f'Saving Optimizer {opt_name}')
-
         emb_size = len(total_test_losses[index])
         start = emb_size * index
         stop = start + emb_size
@@ -219,7 +215,7 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
             else:
                 ax.set_xlabel('Weights Space \n UMAP 1')
 
-        for i in tqdm(range(embs[0].shape[0])):
+        for i in range(embs[0].shape[0]):
 
             point_1 = axs[0].scatter(
                 embs[0][i, 0],

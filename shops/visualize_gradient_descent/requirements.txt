@@ -1,9 +1,7 @@
-tqdm
 numpy
 scipy
 scikit-learn
 tensorflow
-tensorflow-addons
 umap-learn
 matplotlib
 seaborn
