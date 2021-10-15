@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# directories
+shops/visualize_gradient_descent/results/*
+!shops/visualize_gradient_descent/results/.gitkeep
