@@ -47,12 +47,12 @@ X_tr = scaler.transform(X_tr)
 X_ts = X_ts.reshape(-1, 28*28)
 X_ts = scaler.transform(X_ts)
 
-epochs = 6
-batch_size = 200
+epochs = 10
+batch_size = 250
 
 cyclical_learning_rate = CyclicalLearningRate(
-    initial_learning_rate=1e-6,
-    maximal_learning_rate=1e-4,
+    initial_learning_rate=3e-4,
+    maximal_learning_rate=3e-2,
     step_size=(X_tr.shape[0] // batch_size) * 2,
     scale_fn=lambda x: 1 / (2.0 ** (x - 1)),
     scale_mode='cycle'
@@ -60,10 +60,9 @@ cyclical_learning_rate = CyclicalLearningRate(
 
 target_optimizers = {
     'SGD': 'SGD',
-    'SGD(momentum=0.1)': SGD(momentum=0.1),
-    'SGD(netserov momentum=0.1)': SGD(momentum=0.1, nesterov=True),
+    'SGD(momentum=0.1)': SGD(momentum=.1),
     'SGD(lr=1)': SGD(lr=1.),
-    'SGD(lr=1e-6)': SGD(lr=0.000001),
+    'SGD(lr=1e-6)': SGD(lr=.000001),
     'Adam': 'adam',
     'Adam CLR': Adam(learning_rate=cyclical_learning_rate),
     'FTRL': 'Ftrl'
@@ -102,19 +101,22 @@ for opt_name, optimizer in target_optimizers.items():
 to_embed_weights = []
 for layer in range(3):
 
+    stacked_w = np.vstack(
+        [total_weights[optimizer][layer] for optimizer
+            in range(len(target_optimizers))]
+    )
+    stacked_w = StandardScaler().fit_transform(stacked_w)
     to_embed_weights.append(
-        np.vstack(
-            [total_weights[optimizer][layer] for optimizer
-                in range(len(target_optimizers))]
-        )
+        stacked_w
     )
 
 rela = [{
     key: key for key in range(to_embed_weights[0].shape[0])} for i in range(2)
 ]
 mapper = AlignedUMAP(
-    random_state=42,
-    n_components=2
+    n_components=2,
+    metric='manhattan',
+    n_neighbors=30
 ).fit(to_embed_weights, relations=rela)
 
 emb_space_sizes = []
@@ -157,10 +159,10 @@ save_2D_animation(
     target_optimizers=[
         'SGD',
         'SGD(momentum=0.1)',
-        'SGD(netserov momentum=0.1)',
         'SGD(lr=1)',
         'SGD(lr=1e-6)',
         'Adam',
+        'Adam CLR'
         'FTRL'
     ],
     emb_space_sizes=emb_space_sizes,

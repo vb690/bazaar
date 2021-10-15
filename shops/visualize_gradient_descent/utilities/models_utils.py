@@ -72,6 +72,9 @@ def get_weights(model, X, y, layers=(0, 2, 4), epochs=1, batch_size=1,
     step = 0
     for epoch in range(epochs):
 
+        scrambled_idx = np.random.permutation(X_tr.shape[0])
+        X_tr, y_tr = X_tr[scrambled_idx], y_tr[scrambled_idx]
+
         for batch in tqdm(range(1, X_tr.shape[0] // batch_size), leave=True):
 
             start = batch*batch_size
