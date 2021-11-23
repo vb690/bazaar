@@ -211,7 +211,8 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
         for ax_idx, ax in enumerate(axs):
 
             ax.set_title(
-                f'Layer {ax_idx + 1}'
+                f'Layer {ax_idx + 1} \
+                \nOptimizer: {opt_name}'
             )
             if ax_idx == 0:
                 ax.set_ylabel('Weights Space \n UMAP 2')

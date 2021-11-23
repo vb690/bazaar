@@ -47,7 +47,7 @@ X_tr = scaler.transform(X_tr)
 X_ts = X_ts.reshape(-1, 28*28)
 X_ts = scaler.transform(X_ts)
 
-epochs = 10
+epochs = 2
 batch_size = 250
 
 cyclical_learning_rate = CyclicalLearningRate(
@@ -60,7 +60,6 @@ cyclical_learning_rate = CyclicalLearningRate(
 
 target_optimizers = {
     'SGD': 'SGD',
-    'SGD(momentum=0.1)': SGD(momentum=.1),
     'SGD(lr=1)': SGD(lr=1.),
     'SGD(lr=1e-6)': SGD(lr=.000001),
     'Adam': 'adam',
@@ -158,11 +157,10 @@ save_2D_animation(
     embeddings=mapper.embeddings_,
     target_optimizers=[
         'SGD',
-        'SGD(momentum=0.1)',
         'SGD(lr=1)',
         'SGD(lr=1e-6)',
         'Adam',
-        'Adam CLR'
+        'Adam CLR',
         'FTRL'
     ],
     emb_space_sizes=emb_space_sizes,
