@@ -105,4 +105,5 @@ venv.bak/
 
 # directories
 shops/visualize_gradient_descent/results/*
-!shops/visualize_gradient_descent/results/.gitkeep
+!shops/visualize_gradient_descent/results/gifs
+!shops/visualize_gradient_descent/results/movies
