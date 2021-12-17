@@ -7,6 +7,8 @@ from scipy.interpolate import griddata
 
 from sklearn.preprocessing import KBinsDiscretizer
 
+import imageio
+
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import matplotlib
@@ -257,5 +259,38 @@ def save_2D_animation(embeddings, target_optimizers, emb_space_sizes,
             point_1.remove()
             point_2.remove()
             point_3.remove()
+
+    return None
+
+
+def generating_movies(optimizers):
+    """Generating MP4 movies from images visualized by various optimizers.
+
+    Args:
+        optimizers: list of string, names of the optimizers for which
+    """
+    for optimizer in optimizers:
+
+        for modality in ['2D', '3D']:
+
+            writer = imageio.get_writer(
+                f'results//{modality}_{optimizer}.mp4',
+                format='FFMPEG',
+                mode='I',
+                fps=30
+            )
+
+            print(f'Generating movie for {modality}_{optimizer}')
+
+            n_frames = len(os.listdir(f'results//{modality}_{optimizer}'))
+            for frame in tqdm(range(n_frames)):
+
+                writer.append_data(
+                    imageio.imread(
+                        f'results//movies//{modality}_{optimizer}//{frame}.png'
+                    )
+                )
+
+            writer.close()
 
     return None
