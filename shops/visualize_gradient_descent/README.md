@@ -12,8 +12,9 @@ Our approach cover the following steps
 3. After each batch update extract the weights from the 3 layers.
 4. Once training is completed, for each layer the obtained weights are concatenated in a `N X Z` array, where `N` is the number of training steps and `Z` the dimensionality of the layer.
 5. The resulting arrays are included in a list and transformed by [AllignedUMAP](https://umap-learn.readthedocs.io/en/latest/aligned_umap_basic_usage.html) in as many `N X 2` arrays.
-6. The reductions produced by AllignedUMAP are then used for producing animated plots.
-
+6. The reductions produced by AllignedUMAP are then used for producing animated plots.  
+  
+Steps 1 to 4 are perfromed for each chosen algorithm and the weights are collated in a single array. This is done in order to better represent the space defined the MLP's weights.     
 # Features
 
 * Model building function
